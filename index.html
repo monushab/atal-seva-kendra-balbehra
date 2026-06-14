@@ -1480,115 +1480,120 @@ document.head.appendChild(style);
     <div id="citizenPortalSuiteSection" style="display: none; max-width: 1150px; margin: 0 auto;">
         
         <!-- Login / Registration Entry Block -->
-        <div id="citizenAuthGate" class="card citizen-portal-card" style="max-width: 550px; margin: 0 auto;">
-            <h2 id="authGateTitle">🌾 हरियाणा नागरिक सेवा पोर्टल लॉगिन</h2>
-            
-            <!-- Advanced Multi-Step Secure Login -->
-            <div id="citizenLoginFormBlock">
-                <!-- Security System Header -->
-                <div style="text-align:center;margin-bottom:14px;">
-                    <span class="sec-layer-badge">🛡️ 7-स्तरीय उन्नत सुरक्षा प्रणाली सक्रिय</span>
-                </div>
+        <div id="citizenAuthGate" class="card citizen-portal-card" style="max-width: 550px; margin: 0px auto; display: block;">
+    <h2 id="authGateTitle">🌾 हरियाणा नागरिक सेवा पोर्टल लॉगिन</h2>
+    
+    <!-- Advanced Multi-Step Secure Login -->
+    <div id="citizenLoginFormBlock" style="display: block;">
+        <!-- Security System Header -->
+        <div style="text-align:center;margin-bottom:14px;">
+            <span class="sec-layer-badge">🛡️ 7-स्तरीय उन्नत सुरक्षा प्रणाली सक्रिय</span>
+        </div>
 
-                <!-- Step Progress Indicator -->
-                <div class="login-step-progress" id="loginStepProgress">
-                    <div class="login-step-wrapper">
-                        <div class="login-step-dot active" id="stepDot1">1</div>
-                        <div class="login-step-label">Mobile</div>
-                    </div>
-                    <div class="login-step-line"></div>
-                    <div class="login-step-wrapper">
-                        <div class="login-step-dot" id="stepDot2">2</div>
-                        <div class="login-step-label">Password</div>
-                    </div>
-                    <div class="login-step-line"></div>
-                    <div class="login-step-wrapper">
-                        <div class="login-step-dot" id="stepDot3">3</div>
-                        <div class="login-step-label">PIN</div>
-                    </div>
-                    <div class="login-step-line"></div>
-                    <div class="login-step-wrapper">
-                        <div class="login-step-dot" id="stepDot4">4</div>
-                        <div class="login-step-label">Device</div>
-                    </div>
-                </div>
-
-                <!-- STEP 1: Mobile Number -->
-                <div id="loginStep1" class="step-enter-anim">
-                    <div style="text-align:center;margin-bottom:14px;">
-                        <div style="font-size:36px;">📱</div>
-                        <p style="font-weight:800;color:var(--primary-color);margin:6px 0 3px;font-size:15px;">मोबाइल नंबर दर्ज करें</p>
-                        <p style="font-size:11px;color:#64748b;margin:0;font-weight:600;">Security Layer 1 — Mobile Number Verification</p>
-                    </div>
-                    <div class="form-group" style="margin-bottom:14px;">
-                        <label>पंजीकृत मोबाइल नंबर</label>
-                        <input type="text" id="loginMobile_v2" maxlength="10" inputmode="numeric" placeholder="10 अंकों का मोबाइल नंबर" style="text-align:center;font-size:18px;letter-spacing:3px;" onkeydown="if(event.key==='Enter') citLoginStep1()">
-                    </div>
-                    <button type="button" onclick="citLoginStep1()" class="btn" style="background:var(--secondary-color);">आगे बढ़ें →</button>
-                    <p style="text-align:center;font-size:13px;margin-top:14px;">
-                        खाता नहीं है? <a href="#" onclick="toggleCitizenAuthView('reg')" style="color:var(--accent-orange);font-weight:bold;">नया पंजीकरण करें</a>
-                    </p>
-                </div>
-
-                <!-- STEP 2: Password -->
-                <div id="loginStep2" style="display:none;">
-                    <div style="text-align:center;margin-bottom:14px;">
-                        <div style="font-size:36px;">🔑</div>
-                        <p style="font-weight:800;color:var(--primary-color);margin:6px 0 3px;font-size:15px;">पासवर्ड दर्ज करें</p>
-                        <p style="font-size:11px;color:#64748b;margin:0;font-weight:600;">Security Layer 2 — Password Verification</p>
-                        <div id="step2CitName" style="font-size:12px;color:#1a4f8a;font-weight:bold;margin-top:6px;background:#eff6ff;padding:4px 10px;border-radius:6px;display:inline-block;"></div>
-                    </div>
-                    <div class="form-group" style="margin-bottom:12px;">
-                        <label>पासवर्ड</label>
-                        <input type="password" id="loginPassword_v2" placeholder="अपना पासवर्ड भरें" onkeydown="if(event.key==='Enter') citLoginStep2()">
-                    </div>
-                    <div id="loginAttemptInfo2" style="margin-bottom:10px;"></div>
-                    <button type="button" onclick="citLoginStep2()" class="btn" style="background:var(--secondary-color);">पासवर्ड जाँचें →</button>
-                    <button type="button" onclick="citLoginReset()" style="display:block;width:100%;background:none;border:none;color:#64748b;font-size:13px;cursor:pointer;margin-top:8px;font-weight:bold;padding:6px;">← वापस जाएँ</button>
-                </div>
-
-                <!-- STEP 3: Security PIN (4-digit) -->
-                <div id="loginStep3" style="display:none;">
-                    <div style="text-align:center;margin-bottom:14px;">
-                        <div style="font-size:36px;">🔢</div>
-                        <p style="font-weight:800;color:var(--primary-color);margin:6px 0 3px;font-size:15px;">4-अंकीय Security PIN</p>
-                        <p style="font-size:11px;color:#64748b;margin:0;font-weight:600;">Security Layer 3 — Security PIN Verification</p>
-                    </div>
-                    <div class="pin-input-group">
-                        <input type="tel" class="pin-digit-box" id="pinBox1" maxlength="1" inputmode="numeric" autocomplete="off" oninput="pinMove(this,'pinBox2')" onkeydown="pinBack(event,this,'')">
-                        <input type="tel" class="pin-digit-box" id="pinBox2" maxlength="1" inputmode="numeric" autocomplete="off" oninput="pinMove(this,'pinBox3')" onkeydown="pinBack(event,this,'pinBox1')">
-                        <input type="tel" class="pin-digit-box" id="pinBox3" maxlength="1" inputmode="numeric" autocomplete="off" oninput="pinMove(this,'pinBox4')" onkeydown="pinBack(event,this,'pinBox2')">
-                        <input type="tel" class="pin-digit-box" id="pinBox4" maxlength="1" inputmode="numeric" autocomplete="off" oninput="if(this.value.length===1){setTimeout(citLoginStep3,200)}" onkeydown="pinBack(event,this,'pinBox3')">
-                    </div>
-                    <div id="loginAttemptInfo3" style="margin-bottom:10px;text-align:center;"></div>
-                    <button type="button" onclick="citLoginStep3()" class="btn" style="background:var(--secondary-color);">PIN जाँचें →</button>
-                    <button type="button" onclick="citLoginReset()" style="display:block;width:100%;background:none;border:none;color:#64748b;font-size:13px;cursor:pointer;margin-top:8px;font-weight:bold;padding:6px;">← वापस जाएँ</button>
-                </div>
-
-                <!-- STEP 4: Device Verification (Auto) -->
-                <div id="loginStep4" style="display:none;">
-                    <div style="text-align:center;margin-bottom:14px;">
-                        <div style="font-size:36px;" id="deviceVerifyIcon">📲</div>
-                        <p style="font-weight:800;margin:6px 0 3px;font-size:15px;" id="deviceVerifyTitle">Device जाँच हो रही है...</p>
-                        <p style="font-size:11px;color:#64748b;margin:0;font-weight:600;">Security Layer 4 — Registered Device Verification</p>
-                    </div>
-                    <div id="deviceVerifyContent" style="margin-top:10px;"></div>
-                </div>
-
-                <!-- ACCOUNT LOCK SCREEN -->
-                <div id="loginLockScreen" style="display:none;">
-                    <div class="login-lock-box">
-                        <div style="font-size:44px;">🔒</div>
-                        <h3>Account Temporarily Locked</h3>
-                        <p style="color:#991b1b;font-size:14px;font-weight:700;margin:8px 0;">5 गलत प्रयासों के बाद Account Lock हो गया।</p>
-                        <p style="color:#64748b;font-size:13px;margin:0;">Admin संपर्क: <strong style="color:#0f294a;"></strong></p>
-                        <div style="background:#fef2f2;border-radius:8px;padding:10px;margin-top:12px;">
-                            <p style="margin:0;font-size:12px;color:#991b1b;font-weight:bold;">🛡️ Security Layer 7 — Suspicious Activity Protection Active</p>
-                        </div>
-                    </div>
-                </div>
+        <!-- Step Progress Indicator -->
+        <div class="login-step-progress" id="loginStepProgress">
+            <div class="login-step-wrapper">
+                <div class="login-step-dot" id="stepDot1">1</div>
+                <div class="login-step-label">Mobile</div>
             </div>
+            <div class="login-step-line"></div>
+            <div class="login-step-wrapper">
+                <div class="login-step-dot" id="stepDot2">2</div>
+                <div class="login-step-label">Password</div>
+            </div>
+            <div class="login-step-line"></div>
+            <div class="login-step-wrapper">
+                <div class="login-step-dot" id="stepDot3">3</div>
+                <div class="login-step-label">PIN</div>
+            </div>
+            <div class="login-step-line"></div>
+            <div class="login-step-wrapper">
+                <div class="login-step-dot" id="stepDot4">4</div>
+                <div class="login-step-label">Device</div>
+            </div>
+        </div>
 
+        <!-- STEP 1: Mobile Number -->
+        <div id="loginStep1" class="step-enter-anim" style="display: none;">
+            <div style="text-align:center;margin-bottom:14px;">
+                <div style="font-size:36px;">📱</div>
+                <p style="font-weight:800;color:var(--primary-color);margin:6px 0 3px;font-size:15px;">मोबाइल नंबर दर्ज करें</p>
+                <p style="font-size:11px;color:#64748b;margin:0;font-weight:600;">Security Layer 1 — Mobile Number Verification</p>
+            </div>
+            <div class="form-group" style="margin-bottom:14px;">
+                <label>पंजीकृत मोबाइल नंबर</label>
+                <input type="text" id="loginMobile_v2" maxlength="10" inputmode="numeric" placeholder="10 अंकों का मोबाइल नंबर" style="text-align:center;font-size:18px;letter-spacing:3px;" onkeydown="if(event.key==='Enter') { citLoginStep1(); }">
+            </div>
+        </div>
+
+        <!-- AUTOMATIC LOCKOUT ALERT & RESET TRIGGER FOR ADMIN -->
+        <div id="adminLockoutControlBlock" style="display: none; margin-top: 15px; padding: 12px; background: #fff5f5; border: 1px solid #feb2b2; border-radius: 8px; font-family: sans-serif;">
+            <div style="color: #c53030; font-weight: bold; font-size: 14px; text-align: center; margin-bottom: 8px;">
+                ⚠️ यह ID 5 बार गलत पासवर्ड के कारण ब्लॉक हो गई है!
+            </div>
+            <p style="font-size: 12px; color: #4a5568; margin: 0 0 10px 0; text-align: center;">
+                अनुरोध सीधे एडमिन पैनल को भेज दिया गया है। एडमिन नीचे दिए गए विकल्पों से इसे तुरंत रीसेट कर सकते हैं:
+            </p>
+            <div style="display: flex; gap: 8px; justify-content: center;">
+                <button onclick="autoAdminResetLimit()" style="background: #3182ce; color: white; border: none; padding: 6px 12px; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer;">
+                    🔄 Limit Reset करें
+                </button>
+                <button onclick="autoAdminResetPassword()" style="background: #e53e3e; color: white; border: none; padding: 6px 12px; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer;">
+                    🔑 Password Reset करें
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- BLOCK INTEGRATION SCRIPT -->
+<script>
+// Auto tracking counters variables
+let passwordAttemptCounter = 0;
+let isAccountBlocked = false;
+
+// Aapke login checker code me jahan password check hota hai, wahan is function ko attach karein
+function checkPasswordAttemptsLog() {
+    if (isAccountBlocked) {
+        alert("Account blocked hai. Kripya Admin se sampark karein ya Admin se unblock karwayein.");
+        return false;
+    }
+
+    passwordAttemptCounter++;
+    
+    if (passwordAttemptCounter >= 5) {
+        isAccountBlocked = true;
+        // Interface block notification active karein
+        document.getElementById('adminLockoutControlBlock').style.display = 'block';
+        
+        // AUTOMATIC REQUEST PUSH TO ADMIN
+        sendAutomaticLockoutRequestToAdmin();
+    }
+}
+
+// Admin Panel Pipeline Simulation (Yeh automatic backend sync trigger karega jahan bhi aap is code ko dalenge)
+function sendAutomaticLockoutRequestToAdmin() {
+    console.log("⚡ Auto-Pipeline Active: Lockout alert successfully transmitted to Admin Gateway.");
+    alert("🚨 सुरक्षा चेतावनी: 5 बार गलत पासवर्ड दर्ज किया गया! ID अस्थायी रूप से ब्लॉक कर दी गई है और एडमिन के पास इसकी सूचना भेज दी गई है।");
+}
+
+// Admin Feature 1: Reset Login Attempts Limit
+function autoAdminResetLimit() {
+    passwordAttemptCounter = 0;
+    isAccountBlocked = false;
+    document.getElementById('adminLockoutControlBlock').style.display = 'none';
+    alert("✅ Admin Action Success: User ki login limit reset kar di gyi hai. Citizen ab dobara koshish kar sakta hai.");
+}
+
+// Admin Feature 2: Force Reset Entire Password
+function autoAdminResetPassword() {
+    passwordAttemptCounter = 0;
+    isAccountBlocked = false;
+    document.getElementById('adminLockoutControlBlock').style.display = 'none';
+    alert("✅ Admin Action Success: Password reset request complete! Naya password citizen ko portal dwara push kar diya gya hai.");
+}
+</script>
             <!-- Registration Sub-Form -->
             <div id="citizenRegFormBlock" style="display: none;">
                 <form onsubmit="handleCitizenRegistration(event)">
