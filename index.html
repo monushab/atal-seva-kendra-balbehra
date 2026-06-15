@@ -707,6 +707,28 @@
         #advAdminMasterPanel{background:#f0f4f8;padding:16px;border-radius:12px;margin-bottom:16px}
         /* ===== END ADV CSS ===== */
 
+        /* ===== COLORFUL BUTTON ENHANCEMENTS ===== */
+        .btn { background: linear-gradient(135deg, #1a4f8a 0%, #0f294a 100%) !important; color: #fff !important; border: none; box-shadow: 0 3px 10px rgba(15,41,74,0.35); transition: transform .15s, box-shadow .15s; }
+        .btn:hover { transform: translateY(-1px); box-shadow: 0 5px 14px rgba(15,41,74,0.45); }
+        .btn-auth { background: linear-gradient(135deg, #334155 0%, #1e293b 100%) !important; }
+        .backup-btn { transition: transform .15s, box-shadow .15s; box-shadow: 0 2px 7px rgba(0,0,0,0.2); }
+        .backup-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+        .adv-btn.ab-accept { background: linear-gradient(135deg,#16a34a,#15803d) !important; }
+        .adv-btn.ab-reject { background: linear-gradient(135deg,#dc2626,#b91c1c) !important; }
+        .adv-btn { transition: transform .12s; }
+        .adv-btn:hover { transform: translateY(-1px); }
+        .btn-excel { background: linear-gradient(135deg,#166534,#14532d) !important; color:#fff !important; border:none; padding:9px 18px; border-radius:6px; cursor:pointer; font-weight:bold; font-size:13px; box-shadow:0 2px 7px rgba(22,101,52,0.35); transition:transform .15s; }
+        .btn-excel:hover { transform:translateY(-1px); }
+        /* Admin Tab Badges */
+        .adv-tab-badge { display:none; position:absolute; top:-6px; right:-6px; background:#dc2626; color:#fff; border-radius:50%; min-width:18px; height:18px; font-size:10px; font-weight:bold; line-height:18px; text-align:center; padding:0 3px; pointer-events:none; }
+        .adv-tab-btn { position:relative; }
+        /* About Us Modal */
+        #aboutUsModal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,.65); z-index:9998; overflow-y:auto; }
+        .about-us-box { background:#fff; border-radius:16px; max-width:600px; margin:40px auto; padding:28px; box-shadow:0 10px 40px rgba(0,0,0,.3); position:relative; }
+        /* CSC Admin Photo display */
+        #cscAdminPhotoBar { display:none; background:linear-gradient(135deg,#f0f4f8,#e3edf7); border-radius:10px; padding:12px 18px; margin-bottom:14px; align-items:center; gap:14px; }
+        /* ===== END COLORFUL BUTTON ENHANCEMENTS ===== */
+
         /* ===== DOCUMENT SYSTEM CSS ===== */
         .doc-upload-section { background:#f0f9ff; border:2px solid #bae6fd; border-radius:12px; padding:20px; margin-bottom:16px; }
         .doc-upload-section h3 { margin-top:0; color:#0c4a6e; }
@@ -891,7 +913,7 @@
     <!-- Countdown -->
     <div style="margin-top:14px;">
       <div style="font-size:13px;color:#64748b;font-weight:bold;margin-bottom:6px;">पोर्टल स्वतः खुलेगा</div>
-      <div id="splashCountdown" style="font-size:44px;font-weight:900;color:#dc2626;line-height:1;font-family:monospace;">20</div>
+      <div id="splashCountdown" style="font-size:44px;font-weight:900;color:#dc2626;line-height:1;font-family:monospace;">40</div>
       <div style="font-size:12px;color:#64748b;margin-top:2px;font-weight:600;">सेकंड &nbsp;|&nbsp; <span style="color:#1a4f8a;cursor:pointer;text-decoration:underline;" onclick="closeSplash()">यहाँ क्लिक करें → सीधे जाएँ</span></div>
     </div>
 
@@ -906,7 +928,7 @@
 
 <script>
 (function() {
-  var count = 20;
+  var count = 40;
   var el = document.getElementById('splashCountdown');
   var splash = document.getElementById('welcomeSplash');
   var timer = setInterval(function() {
@@ -941,8 +963,8 @@
 <div class="container">
     <div class="top-nav-bar no-print">
         <div>
-            <button class="btn-auth" id="citizenPortalToggleBtn" onclick="switchMainTab('citizen')">🌾 Citizen Services Zone</button>
-            <button class="btn-auth" id="tokenCounterToggleBtn" onclick="switchMainTab('counter')" style="background: var(--secondary-color);">🎫 Counter Token Mode</button>
+            <button class="btn-auth" id="citizenPortalToggleBtn" onclick="switchMainTab('citizen')">🌾 नागरिक लॉगिन एवं पंजीकरण</button>
+            <button class="btn-auth" id="tokenCounterToggleBtn" onclick="switchMainTab('counter')" style="background: var(--secondary-color);display:none;">🎫 Counter Token Mode</button>
         </div>
         <button class="btn-auth" id="authBtn" onclick="toggleAdminMode()">🔑 Admin Login</button>
     </div>
@@ -1001,19 +1023,24 @@
     <!-- ===== NEW ADMIN CONTROL PANEL ===== -->
     <div id="advAdminMasterPanel" class="admin-view-element" style="display:none;">
         <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;">
-            <button onclick="showAdvTab('dash')"      class="adv-tab-btn active-tab" id="advtab_dash">📊 Dashboard</button>
-            <button onclick="showAdvTab('requests')"  class="adv-tab-btn"             id="advtab_requests">📋 Requests</button>
-            <button onclick="showAdvTab('citizens')"  class="adv-tab-btn"             id="advtab_citizens">👥 Citizens</button>
-            <button onclick="showAdvTab('complaints')" class="adv-tab-btn"            id="advtab_complaints">📝 Complaints</button>
-            <button onclick="showAdvTab('notifs')"    class="adv-tab-btn"             id="advtab_notifs">🔔 Notifications</button>
-            <button onclick="showAdvTab('search')"    class="adv-tab-btn"             id="advtab_search">🔍 Search</button>
-            <button onclick="showAdvTab('logs')"      class="adv-tab-btn"             id="advtab_logs">📜 Activity Log</button>
-            <button onclick="showAdvTab('backup')"    class="adv-tab-btn"             id="advtab_backup">💾 Backup</button>
-            <button onclick="showAdvTab('devices')"   class="adv-tab-btn"             id="advtab_devices">🔐 Device Mgmt</button>
-            <button onclick="showAdvTab('unlock')"    class="adv-tab-btn"             id="advtab_unlock" style="position:relative;">🔓 Unlock Requests <span id="unlockBadge" style="display:none;position:absolute;top:-5px;right:-5px;background:#dc2626;color:white;border-radius:50%;width:18px;height:18px;font-size:10px;font-weight:bold;line-height:18px;text-align:center;"></span></button>
-            <button onclick="showAdvTab('forgot')"    class="adv-tab-btn"             id="advtab_forgot" style="position:relative;">🔑 Forgot Requests <span id="forgotBadge" style="display:none;position:absolute;top:-5px;right:-5px;background:#b45309;color:white;border-radius:50%;width:18px;height:18px;font-size:10px;font-weight:bold;line-height:18px;text-align:center;"></span></button>
-            <button onclick="showAdvTab('services')"  class="adv-tab-btn"             id="advtab_services" style="background:linear-gradient(135deg,#0c4a6e,#0369a1);">🏛️ सेवाएँ प्रबंधन</button>
-            <button onclick="showAdvTab('yojana')"    class="adv-tab-btn"             id="advtab_yojana"   style="background:linear-gradient(135deg,#78350f,#b45309);">🌟 योजना प्रबंधन</button>
+            <button onclick="showAdvTab('dash')"       class="adv-tab-btn active-tab"  id="advtab_dash"       style="background:linear-gradient(135deg,#1a4f8a,#0f294a);">📊 Dashboard</button>
+            <button onclick="showAdvTab('requests')"   class="adv-tab-btn"             id="advtab_requests"   style="background:linear-gradient(135deg,#0369a1,#075985);">📋 Requests <span class="adv-tab-badge" id="reqBadge"></span></button>
+            <button onclick="showAdvTab('citizens')"   class="adv-tab-btn"             id="advtab_citizens"   style="background:linear-gradient(135deg,#7c3aed,#5b21b6);">👥 Citizens <span class="adv-tab-badge" id="citBadge" style="background:#7c3aed;"></span></button>
+            <button onclick="showAdvTab('complaints')" class="adv-tab-btn"             id="advtab_complaints" style="background:linear-gradient(135deg,#d97706,#b45309);">📝 Complaints <span class="adv-tab-badge" id="compBadge" style="background:#d97706;"></span></button>
+            <button onclick="showAdvTab('notifs')"     class="adv-tab-btn"             id="advtab_notifs"     style="background:linear-gradient(135deg,#0891b2,#0e7490);">🔔 Notifications</button>
+            <button onclick="showAdvTab('search')"     class="adv-tab-btn"             id="advtab_search"     style="background:linear-gradient(135deg,#475569,#334155);">🔍 Search</button>
+            <button onclick="showAdvTab('logs')"       class="adv-tab-btn"             id="advtab_logs"       style="background:linear-gradient(135deg,#64748b,#475569);">📜 Activity Log</button>
+            <button onclick="showAdvTab('backup')"     class="adv-tab-btn"             id="advtab_backup"     style="background:linear-gradient(135deg,#166534,#14532d);">💾 Backup</button>
+            <button onclick="showAdvTab('devices')"    class="adv-tab-btn"             id="advtab_devices"    style="background:linear-gradient(135deg,#0f766e,#0d9488);">🔐 Device Mgmt <span class="adv-tab-badge" id="deviceBadge" style="background:#0f766e;"></span></button>
+            <button onclick="showAdvTab('unlock')"     class="adv-tab-btn"             id="advtab_unlock"     style="background:linear-gradient(135deg,#dc2626,#b91c1c);">🔓 Unlock <span class="adv-tab-badge" id="unlockBadge"></span></button>
+            <button onclick="showAdvTab('forgot')"     class="adv-tab-btn"             id="advtab_forgot"     style="background:linear-gradient(135deg,#b45309,#92400e);">🔑 Forgot <span class="adv-tab-badge" id="forgotBadge" style="background:#92400e;"></span></button>
+            <button onclick="showAdvTab('services')"   class="adv-tab-btn"             id="advtab_services"   style="background:linear-gradient(135deg,#0c4a6e,#0369a1);">🏛️ सेवाएँ</button>
+            <button onclick="showAdvTab('yojana')"     class="adv-tab-btn"             id="advtab_yojana"     style="background:linear-gradient(135deg,#78350f,#b45309);">🌟 योजना</button>
+            <button onclick="showAdvTab('aboutus')"    class="adv-tab-btn"             id="advtab_aboutus"    style="background:linear-gradient(135deg,#be185d,#9d174d);">📖 हमारे बारे में</button>
+            <button onclick="showAdvTab('branding')"   class="adv-tab-btn"             id="advtab_branding"   style="background:linear-gradient(135deg,#6d28d9,#4c1d95);">🖼️ CSC Branding</button>
+            <button onclick="showAdvTab('seclog')"    class="adv-tab-btn"             id="advtab_seclog"    style="background:linear-gradient(135deg,#dc2626,#991b1b);">🛡️ Security Logs</button>
+            <button onclick="showAdvTab('svcconfig')" class="adv-tab-btn"             id="advtab_svcconfig" style="background:linear-gradient(135deg,#0c4a6e,#0369a1);">⚙️ Service Config</button>
+            <button onclick="showAdvTab('ctradmin')"  class="adv-tab-btn"             id="advtab_ctradmin"  style="background:linear-gradient(135deg,#064e3b,#065f46);">🎫 Counter Token</button>
         </div>
 
         <!-- DASHBOARD TAB -->
@@ -1062,8 +1089,11 @@
         <!-- CITIZENS TAB -->
         <div id="advPanel_citizens" class="adv-section" style="display:none;">
             <h3>👥 नागरिक रिकॉर्ड</h3>
-            <div class="search-row">
-                <input type="text" id="citSrchQ" placeholder="नाम / मोबाइल / ID से खोजें..." oninput="renderAdvCitizens()">
+            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px;">
+                <div class="search-row" style="flex:1;margin:0;">
+                    <input type="text" id="citSrchQ" placeholder="नाम / मोबाइल / ID से खोजें..." oninput="renderAdvCitizens()">
+                </div>
+                <button onclick="doExcelAll()" class="backup-btn" style="background:linear-gradient(135deg,#166534,#14532d);white-space:nowrap;">📊 Excel Export करें</button>
             </div>
             <div style="overflow-x:auto">
                 <table class="adv-table">
@@ -1087,15 +1117,23 @@
         <!-- NOTIFICATIONS TAB -->
         <div id="advPanel_notifs" class="adv-section" style="display:none;">
             <h3>🔔 सूचना प्रबंधन</h3>
-            <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px;">
-                <input type="text" id="nTitle" placeholder="सूचना शीर्षक..." style="padding:9px;border:2px solid #cbd5e1;border-radius:6px;font-size:14px;font-weight:600;flex:1;min-width:140px;">
-                <input type="text" id="nBody"  placeholder="सूचना विवरण..." style="padding:9px;border:2px solid #cbd5e1;border-radius:6px;font-size:14px;font-weight:600;flex:2;min-width:180px;">
-                <select id="nType" style="padding:9px;border:2px solid #cbd5e1;border-radius:6px;font-size:13px;font-weight:bold;">
-                    <option value="">सामान्य</option>
-                    <option value="ni-new">महत्वपूर्ण (पीला)</option>
-                    <option value="ni-success">सफलता (हरा)</option>
-                </select>
-                <button onclick="saveAdvNotif()" style="background:var(--secondary-color);color:#fff;border:none;padding:9px 18px;border-radius:6px;cursor:pointer;font-weight:bold;">+ जोड़ें</button>
+            <div style="background:#f8fafc;border:2px solid #e2e8f0;border-radius:10px;padding:14px;margin-bottom:14px;">
+                <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px;">
+                    <input type="text" id="nTitle" placeholder="सूचना शीर्षक..." style="padding:9px;border:2px solid #cbd5e1;border-radius:6px;font-size:14px;font-weight:600;flex:1;min-width:140px;">
+                    <input type="text" id="nBody"  placeholder="सूचना विवरण..." style="padding:9px;border:2px solid #cbd5e1;border-radius:6px;font-size:14px;font-weight:600;flex:2;min-width:180px;">
+                    <select id="nType" style="padding:9px;border:2px solid #cbd5e1;border-radius:6px;font-size:13px;font-weight:bold;">
+                        <option value="">सामान्य</option>
+                        <option value="ni-new">महत्वपूर्ण (पीला)</option>
+                        <option value="ni-success">सफलता (हरा)</option>
+                    </select>
+                </div>
+                <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+                    <div style="flex:1;min-width:200px;">
+                        <label style="font-size:12px;font-weight:bold;color:#475569;display:block;margin-bottom:4px;">📎 PDF/फोटो अटैच करें (वैकल्पिक)</label>
+                        <input type="file" id="nFile" accept=".pdf,.jpg,.jpeg,.png,.webp" style="font-size:12px;width:100%;">
+                    </div>
+                    <button onclick="saveAdvNotif()" style="background:linear-gradient(135deg,#1a4f8a,#0f294a);color:#fff;border:none;padding:10px 22px;border-radius:6px;cursor:pointer;font-weight:bold;white-space:nowrap;box-shadow:0 2px 8px rgba(15,41,74,0.3);">📢 सूचना जोड़ें</button>
+                </div>
             </div>
             <div id="advNotifList"></div>
         </div>
@@ -1230,10 +1268,58 @@
             <h3>🔐 Device Management — नागरिक Device अनुमोदन</h3>
             <p style="font-size:13px;color:#64748b;margin-bottom:12px;font-weight:600;">नए Device से Login करने वाले नागरिकों की Approval/Rejection यहाँ करें।</p>
             <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;">
-                <button onclick="renderAdminDevicePanel()" class="backup-btn" style="background:#0f294a;">🔄 Refresh</button>
+                <button onclick="renderAdminDevicePanel()" class="backup-btn" style="background:linear-gradient(135deg,#0f766e,#0d9488);">🔄 Refresh</button>
             </div>
             <div id="advDeviceContent" style="min-height:120px;">
                 <p style="color:#94a3b8;text-align:center;padding:20px;">Loading...</p>
+            </div>
+        </div>
+
+        <!-- ABOUT US TAB -->
+        <div id="advPanel_aboutus" class="adv-section" style="display:none;">
+            <h3>📖 हमारे बारे में — Admin प्रबंधन</h3>
+            <p style="font-size:13px;color:#64748b;margin-bottom:14px;font-weight:600;">नागरिक Login पेज पर "हमारे बारे में" बटन पर क्लिक करने पर यह जानकारी दिखाई देगी।</p>
+            <div style="background:#fdf4ff;border:2px solid #e9d5ff;border-radius:12px;padding:18px;margin-bottom:16px;">
+                <div style="margin-bottom:12px;">
+                    <label style="font-size:13px;font-weight:bold;color:#6b21a8;display:block;margin-bottom:6px;">📝 विवरण / About Text</label>
+                    <textarea id="aboutUsText" rows="6" style="width:100%;padding:10px;border:2px solid #d8b4fe;border-radius:8px;font-size:14px;font-weight:600;box-sizing:border-box;resize:vertical;" placeholder="अपने CSC केंद्र के बारे में जानकारी लिखें..."></textarea>
+                </div>
+                <div style="margin-bottom:12px;">
+                    <label style="font-size:13px;font-weight:bold;color:#6b21a8;display:block;margin-bottom:6px;">📎 PDF या फोटो अटैच करें (वैकल्पिक)</label>
+                    <input type="file" id="aboutUsFile" accept=".pdf,.jpg,.jpeg,.png,.webp" style="font-size:13px;">
+                    <div id="aboutUsFilePreview" style="margin-top:8px;"></div>
+                </div>
+                <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                    <button onclick="saveAboutUs()" style="background:linear-gradient(135deg,#be185d,#9d174d);color:#fff;border:none;padding:10px 22px;border-radius:8px;font-size:14px;font-weight:bold;cursor:pointer;box-shadow:0 2px 8px rgba(157,23,77,0.3);">💾 सहेजें</button>
+                    <button onclick="loadAboutUsAdmin()" style="background:linear-gradient(135deg,#475569,#334155);color:#fff;border:none;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:bold;cursor:pointer;">🔄 वर्तमान देखें</button>
+                </div>
+            </div>
+            <div id="aboutUsAdminPreview" style="background:#fff;border:2px solid #e2e8f0;border-radius:12px;padding:16px;"></div>
+        </div>
+
+        <!-- CSC BRANDING TAB -->
+        <div id="advPanel_branding" class="adv-section" style="display:none;">
+            <h3>🖼️ CSC Branding — Admin फोटो एवं CSC Logo</h3>
+            <p style="font-size:13px;color:#64748b;margin-bottom:14px;font-weight:600;">यहाँ अपलोड की गई फोटो और Logo नागरिक Login पेज पर दिखाई देंगे।</p>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;">
+                <div style="background:#eff6ff;border:2px solid #bfdbfe;border-radius:12px;padding:16px;">
+                    <h4 style="margin:0 0 10px;color:#1d4ed8;font-size:14px;">👤 Admin / Operator फोटो</h4>
+                    <input type="file" id="adminPhotoFile" accept="image/*" style="font-size:12px;margin-bottom:10px;display:block;">
+                    <button onclick="saveAdminPhoto()" style="background:linear-gradient(135deg,#1d4ed8,#1e40af);color:#fff;border:none;padding:9px 18px;border-radius:6px;font-size:13px;font-weight:bold;cursor:pointer;width:100%;">📸 फोटो सेव करें</button>
+                    <div id="adminPhotoPreview" style="margin-top:12px;text-align:center;"></div>
+                </div>
+                <div style="background:#f0fdf4;border:2px solid #bbf7d0;border-radius:12px;padding:16px;">
+                    <h4 style="margin:0 0 10px;color:#166534;font-size:14px;">🏛️ CSC Logo अपलोड करें</h4>
+                    <input type="file" id="cscLogoFile" accept="image/*" style="font-size:12px;margin-bottom:10px;display:block;">
+                    <button onclick="saveCscLogo()" style="background:linear-gradient(135deg,#166534,#14532d);color:#fff;border:none;padding:9px 18px;border-radius:6px;font-size:13px;font-weight:bold;cursor:pointer;width:100%;">🏛️ Logo सेव करें</button>
+                    <div id="cscLogoPreview" style="margin-top:12px;text-align:center;"></div>
+                </div>
+            </div>
+            <div style="background:#fef9c3;border:2px solid #fde68a;border-radius:10px;padding:12px;">
+                <p style="margin:0;font-size:13px;color:#78350f;font-weight:700;">💡 नागरिक Login पेज पर Admin फोटो और CSC Logo ऊपर दिखाई देंगे — अगर कोई फोटो नहीं है तो default design दिखाई देगा।</p>
+            </div>
+            <div style="margin-top:14px;">
+                <button onclick="loadBrandingPreviews()" style="background:linear-gradient(135deg,#6d28d9,#4c1d95);color:#fff;border:none;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:bold;cursor:pointer;">🔄 वर्तमान Previews लोड करें</button>
             </div>
         </div>
     </div>
@@ -1271,8 +1357,91 @@
         <button class="btn" id="newFormBtn" style="background:#1a4f8a; max-width:200px; margin: 25px auto 0 auto; display:none;" onclick="resetCustomerFormView()">नया फॉर्म भरें</button>
     </div>
 
+        <!-- SECURITY LOGS PANEL -->
+        <div id="advPanel_seclog" class="adv-section" style="display:none;">
+            <h3>🛡️ Security Logs &amp; Admin Protection</h3>
+            <div class="adv-stats-grid" style="grid-template-columns:repeat(3,1fr);">
+                <div class="adv-stat-box" style="border-left-color:#dc2626;"><h3 id="sec_fails">0</h3><p>Failed Login Attempts</p></div>
+                <div class="adv-stat-box" style="border-left-color:#f59e0b;"><h3 id="sec_locks">0</h3><p>Lockout Events</p></div>
+                <div class="adv-stat-box" style="border-left-color:#22c55e;"><h3 id="sec_ok">0</h3><p>Successful Logins</p></div>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin:12px 0;">
+                <button onclick="renderSecurityLogsPanel()" style="background:#166534;color:#fff;border:none;padding:8px 14px;border-radius:6px;font-weight:bold;cursor:pointer;font-size:13px;">🔄 Refresh</button>
+                <button onclick="clearSecurityLogs()" style="background:#dc2626;color:#fff;border:none;padding:8px 14px;border-radius:6px;font-weight:bold;cursor:pointer;font-size:13px;">🗑️ Logs साफ़ करें</button>
+                <button onclick="exportSecurityLogs()" style="background:#1a4f8a;color:#fff;border:none;padding:8px 14px;border-radius:6px;font-weight:bold;cursor:pointer;font-size:13px;">📥 Export</button>
+                <button onclick="checkFileIntegrity()" style="background:#b45309;color:#fff;border:none;padding:8px 14px;border-radius:6px;font-weight:bold;cursor:pointer;font-size:13px;">🔏 Integrity Check</button>
+            </div>
+            <div id="integrityResult" style="margin-bottom:10px;"></div>
+            <div style="background:#eff6ff;border:2px solid #bfdbfe;border-radius:8px;padding:10px;margin-bottom:10px;font-size:12px;font-weight:700;color:#334155;line-height:2;">
+                ✅ Admin: Full Access &nbsp;|&nbsp; ✅ Citizen: Limited Access &nbsp;|&nbsp; ✅ Counter: Admin Only &nbsp;|&nbsp; ✅ Session: 30min Auto-Logout
+            </div>
+            <div style="background:#f0fdf4;border:2px solid #86efac;border-radius:8px;padding:12px;margin-bottom:10px;">
+                <h4 style="margin:0 0 8px;color:#166534;font-size:13px;">🔑 Admin Override Code Reset</h4>
+                <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+                    <div><label style="font-size:11px;font-weight:bold;">Mobile</label><input type="text" id="adminResetMobile" placeholder="7400189348" style="width:100%;padding:7px;border:2px solid #86efac;border-radius:5px;margin-top:3px;box-sizing:border-box;font-size:12px;font-weight:bold;"></div>
+                    <div><label style="font-size:11px;font-weight:bold;">Reset Code</label><input type="password" id="adminResetCode" placeholder="ASK7400" style="width:100%;padding:7px;border:2px solid #86efac;border-radius:5px;margin-top:3px;box-sizing:border-box;font-size:12px;font-weight:bold;"></div>
+                    <div><label style="font-size:11px;font-weight:bold;">नया Override Code</label><input type="password" id="adminNewCode" placeholder="नया Code" style="width:100%;padding:7px;border:2px solid #86efac;border-radius:5px;margin-top:3px;box-sizing:border-box;font-size:12px;font-weight:bold;"></div>
+                </div>
+                <button onclick="adminSelfPasswordReset()" style="margin-top:8px;background:#166534;color:#fff;border:none;padding:8px 16px;border-radius:6px;font-weight:bold;cursor:pointer;font-size:13px;">🔑 Override Code सेट करें</button>
+                <p style="margin:5px 0 0;font-size:11px;color:#64748b;">Default Reset Code: <strong>ASK7400</strong> | Mobile: <strong>7400189348</strong></p>
+            </div>
+            <div id="secAlertBox" style="background:#fff0f0;border:1px solid #fca5a5;border-radius:8px;padding:8px 12px;margin-bottom:10px;font-size:12px;font-weight:700;color:#dc2626;">✅ कोई Security Alert नहीं।</div>
+            <div style="background:#fff;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;">
+                <div style="background:#0f294a;color:#fff;padding:8px 14px;font-weight:bold;font-size:12px;">📋 Security Log History</div>
+                <div id="securityLogsBox" style="max-height:280px;overflow-y:auto;"></div>
+            </div>
+        </div>
+
+        <!-- SERVICE CONFIG PANEL -->
+        <div id="advPanel_svcconfig" class="adv-section" style="display:none;">
+            <h3>⚙️ Service Configuration</h3>
+            <div style="background:#eff6ff;border:2px solid #bfdbfe;border-radius:8px;padding:12px;margin-bottom:10px;">
+                <h4 style="margin:0 0 8px;color:#1e40af;font-size:13px;">👥 Relation Options</h4>
+                <div id="relationOptionsList" style="display:flex;flex-wrap:wrap;gap:5px;min-height:28px;margin-bottom:8px;"></div>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                    <input type="text" id="newRelationInput" placeholder="नया Relation (e.g. Brother/भाई)" style="flex:1;min-width:170px;padding:7px;border:2px solid #93c5fd;border-radius:5px;font-size:12px;font-weight:600;">
+                    <button onclick="addRelationOption()" style="background:#1a4f8a;color:#fff;border:none;padding:7px 12px;border-radius:5px;font-weight:bold;cursor:pointer;font-size:12px;">➕</button>
+                    <button onclick="resetRelationOptions()" style="background:#64748b;color:#fff;border:none;padding:7px 10px;border-radius:5px;font-weight:bold;cursor:pointer;font-size:12px;">↺ Default</button>
+                </div>
+            </div>
+            <div style="background:#f0fdf4;border:2px solid #86efac;border-radius:8px;padding:12px;margin-bottom:10px;">
+                <h4 style="margin:0 0 8px;color:#166534;font-size:13px;">⏰ OTP Time Slots</h4>
+                <div id="otpSlotsList" style="display:flex;flex-wrap:wrap;gap:5px;min-height:28px;margin-bottom:8px;"></div>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                    <input type="text" id="newOtpSlot" placeholder="नया OTP Slot (e.g. 2 घंटे बाद)" style="flex:1;min-width:170px;padding:7px;border:2px solid #86efac;border-radius:5px;font-size:12px;font-weight:600;">
+                    <button onclick="addOtpSlot()" style="background:#166534;color:#fff;border:none;padding:7px 12px;border-radius:5px;font-weight:bold;cursor:pointer;font-size:12px;">➕</button>
+                </div>
+            </div>
+            <div style="background:#fdf2f8;border:2px solid #f0abfc;border-radius:8px;padding:12px;margin-bottom:10px;">
+                <h4 style="margin:0 0 8px;color:#86198f;font-size:13px;">📞 Call Time Slots</h4>
+                <div id="callSlotsList" style="display:flex;flex-wrap:wrap;gap:5px;min-height:28px;margin-bottom:8px;"></div>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                    <input type="text" id="newCallSlot" placeholder="नया Call Slot (e.g. शाम 4 बजे)" style="flex:1;min-width:170px;padding:7px;border:2px solid #f0abfc;border-radius:5px;font-size:12px;font-weight:600;">
+                    <button onclick="addCallSlot()" style="background:#86198f;color:#fff;border:none;padding:7px 12px;border-radius:5px;font-weight:bold;cursor:pointer;font-size:12px;">➕</button>
+                </div>
+            </div>
+            <div style="background:#fffbeb;border:2px solid #fcd34d;border-radius:8px;padding:12px;">
+                <h4 style="margin:0 0 8px;color:#92400e;font-size:13px;">📄 Service Documents List</h4>
+                <select id="docConfigService" onchange="loadServiceDocConfig()" style="width:100%;padding:7px;border:2px solid #fcd34d;border-radius:5px;font-size:12px;font-weight:600;margin-bottom:8px;"><option value="">-- सेवा चुनें --</option></select>
+                <div id="serviceDocConfigBox"></div>
+            </div>
+        </div>
+
+        <!-- COUNTER TOKEN ADMIN TAB -->
+        <div id="advPanel_ctradmin" class="adv-section" style="display:none;">
+            <h3>🎫 Counter Token System (Admin Only)</h3>
+            <p style="font-size:13px;color:#64748b;margin-bottom:14px;font-weight:600;">Counter Token System केवल Admin के लिए है। नागरिक कार्यालय में आए तो यहाँ से Token बनाएँ।</p>
+            <div class="adv-stats-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:14px;">
+                <div class="adv-stat-box" style="border-left-color:#0ea5e9;"><h3 id="ctr_total">—</h3><p>आज के Tokens</p></div>
+                <div class="adv-stat-box" style="border-left-color:#22c55e;"><h3 id="ctr_done">—</h3><p>Cash Received</p></div>
+                <div class="adv-stat-box" style="border-left-color:#f59e0b;"><h3 id="ctr_pend">—</h3><p>Pending Fees</p></div>
+            </div>
+            <button onclick="openCounterTokenMode()" style="background:linear-gradient(135deg,#064e3b,#065f46);color:#fff;border:none;padding:14px 28px;border-radius:8px;font-weight:bold;cursor:pointer;font-size:15px;box-shadow:0 3px 10px rgba(6,78,59,0.3);">🎫 Counter Token Mode खोलें →</button>
+        </div>
+
+
     <!-- TAB 1: ORIGINAL SYSTEM COUNTER TOKEN VIEW -->
-    <div class="layout-grid" id="mainLayout">
+    <div class="layout-grid" id="mainLayout" style="display:none;">
         <div class="card" id="formCard">
             <h2>📝 पंजीकरण फॉर्म</h2>
             <form id="tokenForm">
@@ -1524,8 +1693,14 @@
     </div>
 
     <!-- TAB 2: BRAND NEW EXCLUSIVE CITIZEN PORTAL SUITE -->
-    <div id="citizenPortalSuiteSection" style="display: none; max-width: 1150px; margin: 0 auto;">
-        
+    <div id="citizenPortalSuiteSection" style="display: block; max-width: 1150px; margin: 0 auto;">
+
+        <!-- CSC Admin Photo + Logo Bar (shown when set by admin) -->
+        <div id="cscAdminPhotoBar" style="display:none;background:linear-gradient(135deg,#f0f4f8,#e3edf7);border-radius:12px;padding:14px 20px;margin-bottom:14px;align-items:center;gap:16px;max-width:550px;margin-left:auto;margin-right:auto;">
+            <div id="cscLogoInPortal" style=""></div>
+            <div id="adminPhotoInPortal" style=""></div>
+        </div>
+
         <!-- Login / Registration Entry Block -->
         <div id="citizenAuthGate" class="card citizen-portal-card" style="max-width: 550px; margin: 0 auto;">
             <h2 id="authGateTitle">🌾 हरियाणा नागरिक सेवा पोर्टल लॉगिन</h2>
@@ -1585,6 +1760,9 @@
                     <p style="text-align:center;font-size:13px;margin-top:14px;">
                         खाता नहीं है? <a href="#" onclick="toggleCitizenAuthView('reg')" style="color:var(--accent-orange);font-weight:bold;">नया पंजीकरण करें</a>
                     </p>
+                    <div style="margin-top:10px;text-align:center;">
+                        <button type="button" onclick="openAboutUsModal()" style="background:linear-gradient(135deg,#be185d,#9d174d);color:#fff;border:none;padding:9px 22px;border-radius:20px;font-size:13px;font-weight:bold;cursor:pointer;box-shadow:0 2px 8px rgba(157,23,77,0.3);transition:transform .15s;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform=''">📖 हमारे बारे में</button>
+                    </div>
                 </div>
 
                 <!-- STEP 2: Password -->
@@ -2066,7 +2244,7 @@
     
     // 🌾 NEW CITIZEN REGISTRATION DATA STORAGE KEYS
     let citizensDb = JSON.parse(localStorage.getItem('csc_guhla_citizens')) || [];
-    let currentCitizenSession = JSON.parse(sessionStorage.getItem('csc_active_citizen')) || null;
+    var currentCitizenSession = JSON.parse(sessionStorage.getItem('csc_active_citizen')) || null;
     let citizenApplications = JSON.parse(localStorage.getItem('csc_guhla_cit_apps')) || [];
 
     const adminMobile = "7400189348";
@@ -2546,21 +2724,93 @@
 
     function triggerServiceBookingFromDirectory(serviceName) {
         if(!currentCitizenSession) return;
-
-        // Check if service needs sub-option selection first
         const svcLower = serviceName.toLowerCase();
-        if(svcLower.includes('निवास') || svcLower.includes('residence') || svcLower.includes('domicile')) {
-            showResidenceCertModal(serviceName); return;
+        if(svcLower.includes('किसान') || svcLower.includes('farmer') || svcLower.includes('कृषि')) {
+            showFarmerServicesModal(serviceName); return;
         }
-        if(svcLower.includes('परिवार पहचान') || svcLower.includes('family id') || svcLower.includes('ppp') || svcLower.includes('परिवार id')) {
-            showFamilyIdModal(serviceName); return;
-        }
-        if(svcLower.includes('जन्म') || svcLower.includes('birth')) {
-            showBirthCertModal(serviceName); return;
-        }
+        showUniversalServicePopup(serviceName);
+    }
 
-        // Direct booking for all other services
-        _submitServiceRequest(serviceName);
+    function showUniversalServicePopup(serviceName, subNote) {
+        const rels = getRelationOptions();
+        const otpS = getOtpTimeSlots();
+        const callS = getCallTimeSlots();
+        const svcDocs = getServiceDocList(serviceName);
+        const svcInfo = getServiceInfo(serviceName);
+
+        let relBtns = rels.map(r =>
+            `<button class="svc-relation-btn" onclick="this.parentElement.querySelectorAll('.svc-relation-btn').forEach(b=>b.classList.remove('selected'));this.classList.add('selected');document.getElementById('uniRel').value='${r.replace(/'/g,"\'")}'">${r}</button>`
+        ).join('');
+
+        let docsHtml = svcDocs.map(d =>
+            `<label style="display:flex;align-items:center;gap:8px;padding:5px 0;font-size:13px;font-weight:600;cursor:pointer;"><input type="checkbox" style="width:15px;height:15px;cursor:pointer;"> ${d}</label>`
+        ).join('') || '<p style="color:#94a3b8;font-size:13px;margin:0;">दस्तावेज़ सूची Admin द्वारा कॉन्फ़िगर होगी।</p>';
+
+        let otpHtml = otpS.map(s => `<label style="font-size:12px;font-weight:600;cursor:pointer;padding:3px 0;display:flex;align-items:center;gap:5px;"><input type="radio" name="uniOtp" value="${s}"> ${s}</label>`).join('');
+        let callHtml = callS.map(s => `<label style="font-size:12px;font-weight:600;cursor:pointer;padding:3px 0;display:flex;align-items:center;gap:5px;"><input type="radio" name="uniCall" value="${s}"> ${s}</label>`).join('');
+
+        _openSvcModal(`
+            <div class="svc-modal-hdr">
+                <h3>${getServiceIcon(serviceName)} ${serviceName}</h3>
+                <p>${subNote || 'जानकारी पढ़ें और अनुरोध भेजें'}</p>
+            </div>
+            <div class="svc-modal-body">
+                <input type="hidden" id="uniRel" value="स्वयं (Self)">
+                <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px;border-bottom:2px solid #e2e8f0;padding-bottom:8px;">
+                    <button onclick="uniTab('rel')" id="utb_rel" style="padding:5px 11px;border:none;border-radius:5px;font-size:11px;font-weight:bold;cursor:pointer;background:#1a4f8a;color:#fff;">👥 संबंध</button>
+                    <button onclick="uniTab('eli')" id="utb_eli" style="padding:5px 11px;border:none;border-radius:5px;font-size:11px;font-weight:bold;cursor:pointer;background:#e2e8f0;color:#334155;">✅ पात्रता</button>
+                    <button onclick="uniTab('doc')" id="utb_doc" style="padding:5px 11px;border:none;border-radius:5px;font-size:11px;font-weight:bold;cursor:pointer;background:#e2e8f0;color:#334155;">📄 दस्तावेज़</button>
+                    <button onclick="uniTab('trm')" id="utb_trm" style="padding:5px 11px;border:none;border-radius:5px;font-size:11px;font-weight:bold;cursor:pointer;background:#e2e8f0;color:#334155;">📋 शर्तें</button>
+                    <button onclick="uniTab('tim')" id="utb_tim" style="padding:5px 11px;border:none;border-radius:5px;font-size:11px;font-weight:bold;cursor:pointer;background:#e2e8f0;color:#334155;">⏰ OTP/Call</button>
+                </div>
+                <div id="utp_rel"><p style="font-size:13px;font-weight:700;margin:0 0 8px;">किसके लिए आवेदन?</p><div class="svc-relation-grid">${relBtns}</div></div>
+                <div id="utp_eli" style="display:none;">
+                    <div style="background:#f0fdf4;border:1px solid #86efac;border-radius:8px;padding:10px;margin-bottom:8px;"><b style="font-size:12px;color:#166534;">✅ पात्रता</b><div style="font-size:12px;color:#334155;line-height:1.8;margin-top:5px;">${svcInfo.eligibility}</div></div>
+                    <div style="background:#fffbeb;border:1px solid #fcd34d;border-radius:8px;padding:10px;"><b style="font-size:12px;color:#92400e;">⏱️ Processing Time:</b> <span style="font-size:12px;font-weight:700;">${svcInfo.processingTime}</span></div>
+                </div>
+                <div id="utp_doc" style="display:none;"><p style="font-size:12px;font-weight:700;margin:0 0 8px;">आवश्यक दस्तावेज़:</p><div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px;">${docsHtml}</div></div>
+                <div id="utp_trm" style="display:none;"><div style="background:#faf5ff;border:1px solid #c4b5fd;border-radius:8px;padding:10px;"><b style="font-size:12px;color:#5b21b6;">📋 शर्तें:</b><div style="font-size:12px;color:#334155;line-height:1.8;margin-top:5px;">${svcInfo.terms}</div></div><div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:10px;margin-top:8px;font-size:12px;color:#1e40af;font-weight:600;">${svcInfo.importantInfo}</div></div>
+                <div id="utp_tim" style="display:none;"><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;"><div style="background:#f0fdf4;border:1px solid #86efac;border-radius:8px;padding:10px;"><b style="font-size:12px;color:#166534;">📱 OTP समय</b><div style="margin-top:6px;">${otpHtml}</div></div><div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:10px;"><b style="font-size:12px;color:#1e40af;">📞 Call Booking</b><div style="margin-top:6px;">${callHtml}</div></div></div></div>
+                <div style="background:#fffbeb;border:1px solid #fcd34d;border-radius:6px;padding:8px;margin-top:10px;font-size:12px;font-weight:700;color:#92400e;">⚠️ अनुरोध भेजने से पहले सभी जानकारी जाँच लें।</div>
+            </div>
+            <div class="svc-modal-footer">
+                <button class="svc-modal-close-btn" onclick="closeSvcModal()">रद्द करें</button>
+                <button class="svc-modal-submit-btn" onclick="(function(){
+                    var rel=document.getElementById('uniRel').value||'स्वयं (Self)';
+                    var otp=document.querySelector('input[name=uniOtp]:checked');
+                    var cal=document.querySelector('input[name=uniCall]:checked');
+                    var note=rel+(otp?' | OTP: '+otp.value:'')+(cal?' | Call: '+cal.value:'');
+                    _submitServiceRequest('${serviceName.replace(/\//g,'\\\\').replace(/'/g,"\\'")}',note);
+                })()">✅ अनुरोध भेजें</button>
+            </div>
+        `);
+    }
+
+    function uniTab(t) {
+        ['rel','eli','doc','trm','tim'].forEach(function(x){
+            var p=document.getElementById('utp_'+x), b=document.getElementById('utb_'+x);
+            if(p) p.style.display='none';
+            if(b){b.style.background='#e2e8f0';b.style.color='#334155';}
+        });
+        var pp=document.getElementById('utp_'+t), bb=document.getElementById('utb_'+t);
+        if(pp) pp.style.display='block';
+        if(bb){bb.style.background='#1a4f8a';bb.style.color='#fff';}
+    }
+
+    function showFarmerServicesModal(serviceName) {
+        var subs=[
+            {n:'फसल पंजीकरण',i:'🌾',d:'Meri Fasal Mera Byora — फसल दर्ज'},
+            {n:'पीएम किसान सम्मान निधि',i:'💰',d:'PM Kisan — ₹6000 वार्षिक'},
+            {n:'कृषि यंत्र सब्सिडी',i:'🚜',d:'Equipment Subsidy — 50% तक'},
+            {n:'फसल बीमा सहायता',i:'🛡️',d:'PM Fasal Bima Yojana'},
+            {n:'भूमि रिकॉर्ड सहायता',i:'📋',d:'जमाबंदी, गिरदावरी, नक़ल'},
+            {n:'अन्य किसान सेवाएँ',i:'🌱',d:'अन्य कृषि सेवाएँ'}
+        ];
+        _openSvcModal(`
+            <div class="svc-modal-hdr"><h3>🌾 किसान सेवाएँ</h3><p>उप-सेवा चुनें</p></div>
+            <div class="svc-modal-body">${subs.map(s=>`<div class="svc-option-card" onclick="closeSvcModal();showUniversalServicePopup('${s.n}','किसान सेवा')"><span class="svc-option-icon">${s.i}</span><div><div class="svc-option-label">${s.n}</div><div class="svc-option-desc">${s.d}</div></div></div>`).join('')}</div>
+            <div class="svc-modal-footer"><button class="svc-modal-close-btn" onclick="closeSvcModal()">रद्द करें</button></div>
+        `);
     }
 
     function _submitServiceRequest(serviceName, subNote) {
@@ -3076,7 +3326,7 @@ Thank you for visiting Atal Seva Kendra balbehra`;
     };
 
     // ── Tab Switcher ───────────────────────────────────────────────
-    const advPanels = ['dash','requests','citizens','complaints','notifs','search','logs','backup','devices','unlock','forgot','services','yojana'];
+    const advPanels = ['dash','requests','citizens','complaints','notifs','search','logs','backup','devices','unlock','forgot','services','yojana','aboutus','branding'];
     function showAdvTab(tab) {
         advPanels.forEach(t => {
             const el  = document.getElementById('advPanel_'+t);
@@ -3085,9 +3335,25 @@ Thank you for visiting Atal Seva Kendra balbehra`;
             if(btn) {
                 btn.classList.toggle('active-tab', t===tab);
                 // Preserve special gradient backgrounds for custom tabs
-                if(t==='services') btn.style.background = (t===tab)?'#0369a1':'linear-gradient(135deg,#0c4a6e,#0369a1)';
-                else if(t==='yojana') btn.style.background = (t===tab)?'#b45309':'linear-gradient(135deg,#78350f,#b45309)';
-                else btn.style.background = (t===tab)?'#1a4f8a':'#334155';
+                const tabColors = {
+                    'dash':       ['#1a4f8a','linear-gradient(135deg,#1a4f8a,#0f294a)'],
+                    'requests':   ['#0369a1','linear-gradient(135deg,#0369a1,#075985)'],
+                    'citizens':   ['#7c3aed','linear-gradient(135deg,#7c3aed,#5b21b6)'],
+                    'complaints': ['#d97706','linear-gradient(135deg,#d97706,#b45309)'],
+                    'notifs':     ['#0891b2','linear-gradient(135deg,#0891b2,#0e7490)'],
+                    'search':     ['#475569','linear-gradient(135deg,#475569,#334155)'],
+                    'logs':       ['#64748b','linear-gradient(135deg,#64748b,#475569)'],
+                    'backup':     ['#166534','linear-gradient(135deg,#166534,#14532d)'],
+                    'devices':    ['#0f766e','linear-gradient(135deg,#0f766e,#0d9488)'],
+                    'unlock':     ['#dc2626','linear-gradient(135deg,#dc2626,#b91c1c)'],
+                    'forgot':     ['#b45309','linear-gradient(135deg,#b45309,#92400e)'],
+                    'services':   ['#0369a1','linear-gradient(135deg,#0c4a6e,#0369a1)'],
+                    'yojana':     ['#b45309','linear-gradient(135deg,#78350f,#b45309)'],
+                    'aboutus':    ['#be185d','linear-gradient(135deg,#be185d,#9d174d)'],
+                    'branding':   ['#6d28d9','linear-gradient(135deg,#6d28d9,#4c1d95)'],
+                };
+                const colors = tabColors[t] || ['#1a4f8a','#334155'];
+                btn.style.background = (t===tab) ? colors[0] : colors[1];
             }
         });
         if(tab==='dash')       renderAdvDash();
@@ -3102,6 +3368,8 @@ Thank you for visiting Atal Seva Kendra balbehra`;
         if(tab==='forgot')     renderAdminForgotPanel();
         if(tab==='services')   renderAdminServicesPanel();
         if(tab==='yojana')     renderAdminYojanaPanel();
+        if(tab==='aboutus')    loadAboutUsAdmin();
+        if(tab==='branding')   loadBrandingPreviews();
     }
 
     // ── DASHBOARD ─────────────────────────────────────────────────
@@ -3327,13 +3595,47 @@ Thank you for visiting Atal Seva Kendra balbehra`;
     function renderAdvNotifPanel() {
         const box = document.getElementById('advNotifList');
         if(!box) return;
+
+        // ── Section 1: Citizen Document Uploads ──────────────────────────
+        var docNotifs = JSON.parse(localStorage.getItem('adv_doc_notifs')||'[]');
+        var reqs = getAdvReqs();
+        var docHtml = '';
+        if(docNotifs.length > 0) {
+            docHtml = '<div style="background:#eff6ff;border:2px solid #3b82f6;border-radius:10px;padding:14px;margin-bottom:16px;">';
+            docHtml += '<h4 style="margin:0 0 10px;color:#1e40af;font-size:14px;">📤 नागरिक द्वारा अपलोड किए गए दस्तावेज़ (' + docNotifs.length + ')</h4>';
+            docHtml += '<div style="display:flex;justify-content:flex-end;margin-bottom:8px;"><button onclick="localStorage.removeItem(\'adv_doc_notifs\');renderAdvNotifPanel();" style="background:#dc2626;color:#fff;border:none;padding:4px 10px;border-radius:4px;font-size:11px;cursor:pointer;">🗑️ सभी हटाएँ</button></div>';
+            docNotifs.forEach(function(dn, i){
+                var isImg = dn.fileB64 && dn.fileB64.startsWith('data:image');
+                var preview = isImg
+                    ? '<img src="'+dn.fileB64+'" onclick="zoomImg(\''+dn.fileB64+'\')" style="max-width:100%;max-height:120px;border-radius:6px;cursor:zoom-in;display:block;margin:6px 0;" title="Click to zoom">'
+                    : '<div style="background:#f1f5f9;border-radius:6px;padding:10px;margin:6px 0;text-align:center;"><a href="'+dn.fileB64+'" download="'+dn.fileName+'" style="font-weight:bold;color:#1d4ed8;font-size:13px;">📥 '+dn.fileName+' — Download करें</a></div>';
+                docHtml += '<div style="background:#fff;border:1px solid #bfdbfe;border-radius:8px;padding:12px;margin-bottom:10px;">';
+                docHtml += '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;">';
+                docHtml += '<div><strong style="color:#1e40af;">'+dn.citizenName+'</strong> <span style="color:#64748b;font-size:12px;">('+dn.citizenMobile+')</span></div>';
+                docHtml += '<span style="font-size:11px;color:#94a3b8;">'+dn.date+'</span>';
+                docHtml += '</div>';
+                docHtml += '<div style="font-size:12px;color:#475569;margin:4px 0;">📋 Request: <strong>'+dn.reqNum+'</strong> | 📄 File: <strong>'+dn.fileName+'</strong></div>';
+                docHtml += preview;
+                docHtml += '<div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">';
+                docHtml += '<button onclick="openAdminDocReview(\''+dn.reqNum+'\')" style="background:#1e40af;color:#fff;border:none;padding:6px 12px;border-radius:4px;font-size:12px;cursor:pointer;font-weight:bold;">📂 सभी Documents देखें</button>';
+                docHtml += '<a href="'+dn.fileB64+'" download="'+dn.fileName+'" style="text-decoration:none;"><button style="background:#166534;color:#fff;border:none;padding:6px 12px;border-radius:4px;font-size:12px;cursor:pointer;font-weight:bold;">📥 Download</button></a>';
+                var dn_i = i;
+                docHtml += '<button onclick="(function(){var d=JSON.parse(localStorage.getItem(\'adv_doc_notifs\')||\'[\');d.splice('+dn_i+',1);localStorage.setItem(\'adv_doc_notifs\',JSON.stringify(d));renderAdvNotifPanel();})()" style="background:#e5e7eb;color:#374151;border:none;padding:6px 10px;border-radius:4px;font-size:12px;cursor:pointer;">✖ हटाएँ</button>';
+                docHtml += '</div></div>';
+            });
+            docHtml += '</div>';
+        } else {
+            docHtml = '<div style="background:#f0fdf4;border:2px solid #86efac;border-radius:10px;padding:12px;margin-bottom:16px;text-align:center;color:#166534;font-size:13px;">✅ कोई नई Document Notification नहीं है।</div>';
+        }
+
+        // ── Section 2: Admin-created notifications ────────────────────────
         const saved  = getAdvNotifs();
         const all    = [...saved, ...defaultNotifs];
-        box.innerHTML = all.map(n=>`
-            <div class="notif-item ${n.cls||''}">
-                <strong>${n.title}:</strong> ${n.body}
-                ${n.date?`<span style="font-size:11px;color:#94a3b8;margin-left:8px;">${n.date}</span>`:''}
-            </div>`).join('');
+        const notifsHtml = all.map(n=>{
+            var fLink = (n.fileData) ? '<div style="margin-top:6px;"><a href="'+n.fileData+'" download="'+(n.fileName||'file')+'" style="color:#1d4ed8;font-weight:bold;font-size:12px;">📎 '+n.fileName+' Download</a></div>' : '';
+            return '<div class="notif-item '+(n.cls||'')+'"><strong>'+n.title+':</strong> '+n.body+(n.date?'<span style="font-size:11px;color:#94a3b8;margin-left:8px;">'+n.date+'</span>':'')+fLink+'</div>';
+        }).join('');
+        box.innerHTML = docHtml + (all.length ? '<h4 style="margin:12px 0 8px;color:#475569;">📢 सामान्य सूचनाएँ</h4>' + notifsHtml : '');
     }
 
     function saveAdvNotif() {
@@ -3341,14 +3643,36 @@ Thank you for visiting Atal Seva Kendra balbehra`;
         const body  = document.getElementById('nBody').value.trim();
         const cls   = document.getElementById('nType').value;
         if(!title||!body) { alert('शीर्षक और विवरण दोनों भरें।'); return; }
-        const saved = getAdvNotifs();
-        saved.unshift({title, body, cls, date: new Date().toLocaleDateString('en-IN')});
-        saveAdvNotifs(saved);
-        advLog('Notification', title);
-        document.getElementById('nTitle').value='';
-        document.getElementById('nBody').value='';
-        renderAdvNotifPanel();
-        alert('✅ सूचना जोड़ दी गई! नागरिकों को "सूचनाएँ" section में दिखेगी।');
+        const fileEl = document.getElementById('nFile');
+        const notifObj = {title, body, cls, date: new Date().toLocaleDateString('en-IN')};
+        if(fileEl && fileEl.files && fileEl.files[0]) {
+            const file = fileEl.files[0];
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                notifObj.fileData = e.target.result;
+                notifObj.fileName = file.name;
+                notifObj.fileType = file.type;
+                const saved = getAdvNotifs();
+                saved.unshift(notifObj);
+                saveAdvNotifs(saved);
+                advLog('Notification', title + ' [+file]');
+                document.getElementById('nTitle').value='';
+                document.getElementById('nBody').value='';
+                fileEl.value='';
+                renderAdvNotifPanel();
+                alert('✅ सूचना जोड़ दी गई! फ़ाइल भी अटैच हो गई।');
+            };
+            reader.readAsDataURL(file);
+        } else {
+            const saved = getAdvNotifs();
+            saved.unshift(notifObj);
+            saveAdvNotifs(saved);
+            advLog('Notification', title);
+            document.getElementById('nTitle').value='';
+            document.getElementById('nBody').value='';
+            renderAdvNotifPanel();
+            alert('✅ सूचना जोड़ दी गई! नागरिकों को "सूचनाएँ" section में दिखेगी।');
+        }
     }
 
     // ── SEARCH ────────────────────────────────────────────────────
@@ -3524,7 +3848,23 @@ Thank you for visiting Atal Seva Kendra balbehra`;
         const saved = getAdvNotifs();
         const all   = [...saved, ...defaultNotifs];
         box.innerHTML = all.length
-            ? all.map(n=>`<div class="notif-item ${n.cls||''}"><strong>${n.title}:</strong> ${n.body}</div>`).join('')
+            ? all.map(n=>{
+                let fileHtml = '';
+                if(n.fileData && n.fileName) {
+                    const isPdf = n.fileType && n.fileType.includes('pdf');
+                    fileHtml = `<div style="margin-top:8px;">
+                        <a href="${n.fileData}" download="${n.fileName}" style="display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#1a4f8a,#0f294a);color:#fff;padding:6px 14px;border-radius:6px;font-size:12px;font-weight:bold;text-decoration:none;">
+                            ${isPdf ? '📄' : '🖼️'} ${n.fileName} डाउनलोड करें
+                        </a>
+                    </div>`;
+                }
+                return `<div class="notif-item ${n.cls||''}">
+                    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;flex-wrap:wrap;">
+                        <div style="flex:1;"><strong>${n.title}:</strong> ${n.body}${fileHtml}</div>
+                        ${n.date ? `<span style="font-size:11px;color:#94a3b8;white-space:nowrap;">${n.date}</span>` : ''}
+                    </div>
+                </div>`;
+              }).join('')
             : `<p style="color:#94a3b8;text-align:center;padding:20px;">अभी कोई सूचना नहीं है।</p>`;
     }
 
@@ -3714,7 +4054,7 @@ Thank you for visiting Atal Seva Kendra balbehra`;
             }
             const adminMsg = comment ? `<div class="doc-admin-comment">💬 Admin: ${comment}</div>` : '';
             const reupload = (status==='Correction'||status==='Rejected')
-                ? `<input type="file" id="docInput_${reqNum}_${def.id}" accept="image/*,.pdf" style="display:none;" onchange="saveCitDoc('${reqNum}','${def.id}',this)">
+                ? `<input type="file" id="docInput_${reqNum}_${def.id}" accept="*" style="display:none;" onchange="saveCitDoc('${reqNum}','${def.id}',this)">
                    <button class="doc-change-btn" onclick="document.getElementById('docInput_${reqNum}_${def.id}').click()">🔄 Re-Upload</button>`
                 : '';
 
@@ -3727,7 +4067,7 @@ Thank you for visiting Atal Seva Kendra balbehra`;
                 ${preview}
                 ${adminMsg}
                 ${!hasFile ? `
-                <input type="file" id="docInput_${reqNum}_${def.id}" accept="image/*,.pdf" style="display:none;" onchange="saveCitDoc('${reqNum}','${def.id}',this)">
+                <input type="file" id="docInput_${reqNum}_${def.id}" accept="*" style="display:none;" onchange="saveCitDoc('${reqNum}','${def.id}',this)">
                 <button class="doc-box-upload-btn" onclick="document.getElementById('docInput_${reqNum}_${def.id}').click()">📤 Upload करें</button>` : reupload}
             </div>`;
         });
@@ -3739,8 +4079,8 @@ Thank you for visiting Atal Seva Kendra balbehra`;
     function saveCitDoc(reqNum, docId, input) {
         if(!input.files.length) return;
         const file   = input.files[0];
-        const maxMB  = 3;
-        if(file.size > maxMB * 1024 * 1024) { alert(`❌ File बहुत बड़ी है। Max ${maxMB}MB allowed.`); input.value=''; return; }
+        const maxMB  = 10;
+        if(file.size > maxMB * 1024 * 1024) { alert('❌ File बहुत बड़ी है ('+( file.size/1024/1024).toFixed(1)+' MB)। कृपया 10 MB से छोटी File चुनें।'); input.value=''; return; }
         const reader = new FileReader();
         reader.onload = function(e) {
             const reqs = getAdvReqs();
@@ -3756,7 +4096,13 @@ Thank you for visiting Atal Seva Kendra balbehra`;
             };
             saveAdvReqs(reqs);
             advLog('Document Upload', `${reqNum} — ${docId} — ${file.name} by ${currentCitizenSession.name}`);
-            alert(`✅ "${file.name}" सफलतापूर्वक Upload हो गया!\nAdmin जल्द जाँच करेंगे।`);
+            // Add admin notification for document upload
+            (function(){
+                var dn = JSON.parse(localStorage.getItem('adv_doc_notifs')||'[]');
+                dn.unshift({ reqNum:reqNum, docId:docId, citizenName:currentCitizenSession.name, citizenMobile:currentCitizenSession.mobile, fileName:file.name, fileB64:e.target.result, fileType:file.type, date:new Date().toLocaleString('en-IN'), seen:false });
+                localStorage.setItem('adv_doc_notifs', JSON.stringify(dn));
+            })();
+            alert('✅ "'+file.name+'" सफलतापूर्वक Upload हो गया!\nAdmin जल्द जाँच करेंगे।');
             input.value = '';
             renderCitDocBoxes(reqNum); // re-render to show preview
         };
@@ -4917,7 +5263,7 @@ Thank you for visiting Atal Seva Kendra balbehra`;
     var _lastCertSnapshot = '';
     setInterval(function() {
         // Only run when citizen is logged in
-        if(!currentCitizenSession) return;
+        if(!window.currentCitizenSession) return;
         var coreDash = document.getElementById('citizenCoreDashboardPanel');
         if(!coreDash || coreDash.style.display === 'none') return;
 
@@ -4962,6 +5308,17 @@ Thank you for visiting Atal Seva Kendra balbehra`;
         var adminPanel = document.getElementById('advAdminMasterPanel');
         if(adminPanel && adminPanel.style.display !== 'none') {
             updateForgotBadge();
+            if(typeof updateAllTabBadges === 'function') updateAllTabBadges();
+            // Auto-refresh active admin tab content
+            var activeTab = null;
+            ['requests','citizens','complaints','devices','unlock','forgot'].forEach(function(t) {
+                var btn = document.getElementById('advtab_' + t);
+                if(btn && btn.classList.contains('active-tab')) activeTab = t;
+            });
+            if(activeTab === 'requests' && typeof renderAdvReqTable === 'function') renderAdvReqTable();
+            if(activeTab === 'citizens' && typeof renderAdvCitizens === 'function') renderAdvCitizens();
+            if(activeTab === 'complaints' && typeof renderAdvComplaints === 'function') renderAdvComplaints();
+            if(activeTab === 'devices' && typeof renderAdminDevicePanel === 'function') renderAdminDevicePanel();
         }
     }, 3000);
     </script>
@@ -5293,5 +5650,535 @@ Thank you for visiting Atal Seva Kendra balbehra`;
     }
     </script>
 
+    <!-- ===== ABOUT US MODAL ===== -->
+    <div id="aboutUsModal" onclick="if(event.target===this)closeAboutUsModal()" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.65);z-index:9998;overflow-y:auto;">
+        <div class="about-us-box" style="background:#fff;border-radius:16px;max-width:620px;margin:40px auto;padding:28px;box-shadow:0 10px 40px rgba(0,0,0,.3);position:relative;">
+            <button onclick="closeAboutUsModal()" style="position:absolute;top:14px;right:14px;background:#f1f5f9;border:none;border-radius:50%;width:32px;height:32px;font-size:18px;cursor:pointer;color:#475569;font-weight:bold;line-height:32px;text-align:center;">✕</button>
+            <div style="text-align:center;margin-bottom:18px;">
+                <div style="font-size:42px;margin-bottom:8px;">🏛️</div>
+                <h2 style="margin:0;color:#0f294a;font-size:20px;">हमारे बारे में</h2>
+                <p style="margin:4px 0 0;font-size:13px;color:#64748b;font-weight:600;">Atal Seva Kendra — Balbehra, Guhla</p>
+            </div>
+            <div id="aboutUsModalContent" style="font-size:15px;color:#334155;line-height:1.8;font-weight:600;white-space:pre-wrap;margin-bottom:16px;"></div>
+            <div id="aboutUsModalFile" style="margin-top:12px;"></div>
+            <div style="text-align:center;margin-top:16px;">
+                <button onclick="closeAboutUsModal()" style="background:linear-gradient(135deg,#0f294a,#1a4f8a);color:#fff;border:none;padding:11px 28px;border-radius:8px;font-size:14px;font-weight:bold;cursor:pointer;box-shadow:0 2px 8px rgba(15,41,74,0.3);">✅ ठीक है</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== NEW FEATURES: ABOUT US, CSC BRANDING, TAB BADGES ===== -->
+    <script>
+    // ══════════════════════════════════════════════════════════════════
+    //  ABOUT US MANAGEMENT
+    // ══════════════════════════════════════════════════════════════════
+    function getAboutUs() {
+        try { return JSON.parse(localStorage.getItem('ask_about_us') || 'null'); } catch(e) { return null; }
+    }
+    function saveAboutUsData(d) { localStorage.setItem('ask_about_us', JSON.stringify(d)); }
+
+    function saveAboutUs() {
+        var textEl = document.getElementById('aboutUsText');
+        var fileEl = document.getElementById('aboutUsFile');
+        var text = textEl ? textEl.value.trim() : '';
+        if(!text) { alert('कृपया विवरण लिखें।'); return; }
+        var data = { text: text, savedAt: new Date().toLocaleDateString('en-IN') };
+        if(fileEl && fileEl.files && fileEl.files[0]) {
+            var file = fileEl.files[0];
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                data.fileData = e.target.result;
+                data.fileName = file.name;
+                data.fileType = file.type;
+                saveAboutUsData(data);
+                loadAboutUsAdmin();
+                if(fileEl) fileEl.value = '';
+                alert('✅ "हमारे बारे में" सफलतापूर्वक सहेजा गया!');
+            };
+            reader.readAsDataURL(file);
+        } else {
+            saveAboutUsData(data);
+            loadAboutUsAdmin();
+            alert('✅ "हमारे बारे में" सफलतापूर्वक सहेजा गया!');
+        }
+    }
+
+    function loadAboutUsAdmin() {
+        var data = getAboutUs();
+        var textEl  = document.getElementById('aboutUsText');
+        var preview = document.getElementById('aboutUsAdminPreview');
+        var filePreview = document.getElementById('aboutUsFilePreview');
+        if(!data) {
+            if(preview) preview.innerHTML = '<p style="color:#94a3b8;text-align:center;padding:20px;font-weight:600;">अभी कोई जानकारी नहीं है। ऊपर लिखकर सहेजें।</p>';
+            return;
+        }
+        if(textEl && !textEl.value) textEl.value = data.text || '';
+        var html = '<h4 style="color:#6b21a8;margin:0 0 10px;font-size:14px;">📋 वर्तमान जानकारी (नागरिकों को दिखाई देगी):</h4>';
+        html += '<div style="background:#fdf4ff;border:2px solid #e9d5ff;border-radius:8px;padding:12px;font-size:14px;color:#334155;line-height:1.8;font-weight:600;white-space:pre-wrap;">' + (data.text||'') + '</div>';
+        if(data.fileData) {
+            var isPdf = data.fileType && data.fileType.includes('pdf');
+            html += '<div style="margin-top:12px;"><a href="' + data.fileData + '" download="' + data.fileName + '" style="display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#be185d,#9d174d);color:#fff;padding:8px 16px;border-radius:6px;font-size:13px;font-weight:bold;text-decoration:none;">' + (isPdf?'📄':'🖼️') + ' ' + data.fileName + '</a></div>';
+            if(filePreview && !isPdf) {
+                filePreview.innerHTML = '<img src="' + data.fileData + '" style="max-width:100%;max-height:120px;border-radius:8px;margin-top:6px;border:1px solid #e2e8f0;">';
+            }
+        }
+        html += '<p style="font-size:11px;color:#94a3b8;margin:8px 0 0;">💾 अंतिम बार सहेजा: ' + (data.savedAt||'—') + '</p>';
+        if(preview) preview.innerHTML = html;
+    }
+
+    function openAboutUsModal() {
+        var data = getAboutUs();
+        var modal   = document.getElementById('aboutUsModal');
+        var content = document.getElementById('aboutUsModalContent');
+        var fileBox = document.getElementById('aboutUsModalFile');
+        if(!modal) return;
+        if(!data || !data.text) {
+            if(content) content.innerHTML = '<div style="text-align:center;padding:20px;color:#64748b;font-weight:bold;">ℹ️ Admin ने अभी तक "हमारे बारे में" जानकारी नहीं डाली है।<br><br>कृपया बाद में देखें।</div>';
+            if(fileBox) fileBox.innerHTML = '';
+        } else {
+            if(content) content.textContent = data.text;
+            if(fileBox && data.fileData) {
+                var isPdf = data.fileType && data.fileType.includes('pdf');
+                if(isPdf) {
+                    fileBox.innerHTML = '<div style="text-align:center;"><a href="' + data.fileData + '" download="' + data.fileName + '" style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#1a4f8a,#0f294a);color:#fff;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:bold;text-decoration:none;">📄 ' + data.fileName + ' डाउनलोड करें</a></div>';
+                } else {
+                    fileBox.innerHTML = '<img src="' + data.fileData + '" style="max-width:100%;border-radius:10px;border:2px solid #e2e8f0;display:block;margin:0 auto;">';
+                }
+            } else if(fileBox) {
+                fileBox.innerHTML = '';
+            }
+        }
+        modal.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeAboutUsModal() {
+        var modal = document.getElementById('aboutUsModal');
+        if(modal) { modal.style.display = 'none'; document.body.style.overflow = ''; }
+    }
+
+    // ══════════════════════════════════════════════════════════════════
+    //  CSC BRANDING — Admin Photo + CSC Logo
+    // ══════════════════════════════════════════════════════════════════
+    function saveAdminPhoto() {
+        var fileEl = document.getElementById('adminPhotoFile');
+        if(!fileEl || !fileEl.files || !fileEl.files[0]) { alert('कृपया पहले फोटो चुनें।'); return; }
+        var file = fileEl.files[0];
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            localStorage.setItem('ask_admin_photo', e.target.result);
+            if(fileEl) fileEl.value = '';
+            loadBrandingPreviews();
+            refreshPortalBranding();
+            alert('✅ Admin फोटो सफलतापूर्वक सहेजी गई! नागरिक Login पेज पर दिखाई देगी।');
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function saveCscLogo() {
+        var fileEl = document.getElementById('cscLogoFile');
+        if(!fileEl || !fileEl.files || !fileEl.files[0]) { alert('कृपया पहले Logo चुनें।'); return; }
+        var file = fileEl.files[0];
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            localStorage.setItem('ask_csc_logo', e.target.result);
+            if(fileEl) fileEl.value = '';
+            loadBrandingPreviews();
+            refreshPortalBranding();
+            alert('✅ CSC Logo सफलतापूर्वक सहेजा गया! नागरिक Login पेज पर दिखाई देगा।');
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function loadBrandingPreviews() {
+        var adminPhoto = localStorage.getItem('ask_admin_photo');
+        var cscLogo    = localStorage.getItem('ask_csc_logo');
+        var adminPreview = document.getElementById('adminPhotoPreview');
+        var logoPreview  = document.getElementById('cscLogoPreview');
+        if(adminPreview) {
+            adminPreview.innerHTML = adminPhoto
+                ? '<img src="' + adminPhoto + '" style="max-width:120px;max-height:120px;border-radius:50%;border:3px solid #1d4ed8;object-fit:cover;">'
+                : '<p style="color:#94a3b8;font-size:12px;text-align:center;margin:10px 0;">कोई फोटो नहीं है।</p>';
+        }
+        if(logoPreview) {
+            logoPreview.innerHTML = cscLogo
+                ? '<img src="' + cscLogo + '" style="max-width:120px;max-height:80px;border-radius:8px;border:2px solid #166534;object-fit:contain;">'
+                : '<p style="color:#94a3b8;font-size:12px;text-align:center;margin:10px 0;">कोई Logo नहीं है।</p>';
+        }
+    }
+
+    function refreshPortalBranding() {
+        var adminPhoto = localStorage.getItem('ask_admin_photo');
+        var cscLogo    = localStorage.getItem('ask_csc_logo');
+        var bar          = document.getElementById('cscAdminPhotoBar');
+        var logoDiv      = document.getElementById('cscLogoInPortal');
+        var photoDiv     = document.getElementById('adminPhotoInPortal');
+        if(!bar) return;
+        if(adminPhoto || cscLogo) {
+            bar.style.display = 'flex';
+            if(logoDiv) logoDiv.innerHTML = cscLogo
+                ? '<img src="' + cscLogo + '" style="height:56px;width:auto;border-radius:8px;border:2px solid #166534;object-fit:contain;">'
+                : '';
+            if(photoDiv) photoDiv.innerHTML = adminPhoto
+                ? '<div style="display:flex;align-items:center;gap:10px;"><img src="' + adminPhoto + '" style="width:52px;height:52px;border-radius:50%;object-fit:cover;border:3px solid #1d4ed8;"><div style="font-size:13px;font-weight:bold;color:#0f294a;">Atal Seva Kendra<br><span style="font-size:11px;color:#64748b;">Balbehra, Guhla</span></div></div>'
+                : '';
+        } else {
+            bar.style.display = 'none';
+        }
+    }
+
+    // ══════════════════════════════════════════════════════════════════
+    //  ALL TAB BADGES UPDATE
+    // ══════════════════════════════════════════════════════════════════
+    function updateAllTabBadges() {
+        // Requests badge — pending
+        try {
+            var reqs = JSON.parse(localStorage.getItem('adv_requests') || '[]');
+            var pendingReqs = reqs.filter(function(r){ return r.status==='Pending' || r.status==='Under Review' || r.status==='Docs Required'; }).length;
+            var reqBadge = document.getElementById('reqBadge');
+            if(reqBadge) { reqBadge.style.display = pendingReqs > 0 ? 'inline-block' : 'none'; reqBadge.innerText = pendingReqs; }
+        } catch(e) {}
+
+        // Citizens badge — total count (shown always if > 0)
+        try {
+            var cits = JSON.parse(localStorage.getItem('csc_guhla_citizens') || '[]');
+            var citBadge = document.getElementById('citBadge');
+            if(citBadge) { citBadge.style.display = cits.length > 0 ? 'inline-block' : 'none'; citBadge.innerText = cits.length; }
+        } catch(e) {}
+
+        // Complaints badge — pending/open
+        try {
+            var comps = JSON.parse(localStorage.getItem('adv_complaints') || '[]');
+            var pendingComps = comps.filter(function(c){ return !c.status || c.status === 'Pending' || c.status === 'Open'; }).length;
+            var compBadge = document.getElementById('compBadge');
+            if(compBadge) { compBadge.style.display = pendingComps > 0 ? 'inline-block' : 'none'; compBadge.innerText = pendingComps; }
+        } catch(e) {}
+
+        // Device badge — pending
+        try {
+            var devReqs = JSON.parse(localStorage.getItem('csc_device_requests') || '[]');
+            var pendingDev = devReqs.filter(function(d){ return d.status === 'Pending'; }).length;
+            var devBadge = document.getElementById('deviceBadge');
+            if(devBadge) { devBadge.style.display = pendingDev > 0 ? 'inline-block' : 'none'; devBadge.innerText = pendingDev; }
+        } catch(e) {}
+
+        // Unlock badge — already handled by updateUnlockBadge(), just also call it
+        if(typeof updateUnlockBadge === 'function') updateUnlockBadge();
+        if(typeof updateForgotBadge === 'function') updateForgotBadge();
+    }
+
+    // ── Init on page load ─────────────────────────────────────────
+    (function() {
+        // Wait for DOM ready, then init branding
+        function initBranding() {
+            refreshPortalBranding();
+            updateAllTabBadges();
+        }
+        if(document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initBranding);
+        } else {
+            setTimeout(initBranding, 200);
+        }
+    })();
+
+    // ── Also refresh branding when citizen portal becomes visible ──
+    var _origSwitchMainTab = window.switchMainTab;
+    if(typeof _origSwitchMainTab === 'function') {
+        window.switchMainTab = function(tab) {
+            _origSwitchMainTab(tab);
+            if(tab === 'citizen') setTimeout(refreshPortalBranding, 100);
+        };
+    }
+    </script>
+
+
+<script>
+// ══════════════════════════════════════════════════════
+// SERVICE CONFIG HELPERS
+// ══════════════════════════════════════════════════════
+var _defRels=['स्वयं (Self)','पत्नी (Wife)','पति (Husband)','पुत्र (Son)','पुत्री (Daughter)','पिता (Father)','माता (Mother)','दादा (Grandfather)','दादी (Grandmother)','अन्य (Other)'];
+function getRelationOptions(){var c=JSON.parse(localStorage.getItem('adv_rel_opts')||'[]');return c.length?c:_defRels.slice();}
+var _defOtp=['अभी OTP भेजें','30 मिनट बाद','1 घंटे बाद','2 घंटे बाद','कल सुबह 10 बजे'];
+function getOtpTimeSlots(){var c=JSON.parse(localStorage.getItem('adv_otp_slots')||'[]');return c.length?c:_defOtp.slice();}
+var _defCall=['अभी Call करें','सुबह 10 बजे','दोपहर 12 बजे','दोपहर 2 बजे','शाम 4 बजे','शाम 6 बजे'];
+function getCallTimeSlots(){var c=JSON.parse(localStorage.getItem('adv_call_slots')||'[]');return c.length?c:_defCall.slice();}
+function getServiceDocList(svc){
+    var m=JSON.parse(localStorage.getItem('adv_svc_doc_map')||'{}');
+    if(m[svc]) return m[svc];
+    var n=svc.toLowerCase();
+    if(n.includes('आय')||n.includes('income')) return ['☐ आधार कार्ड','☐ परिवार पहचान पत्र','☐ बैंक पासबुक','☐ पासपोर्ट फोटो','☐ राशन कार्ड'];
+    if(n.includes('जाति')||n.includes('caste')) return ['☐ आधार कार्ड','☐ परिवार पहचान पत्र','☐ राशन कार्ड','☐ पासपोर्ट फोटो'];
+    if(n.includes('निवास')||n.includes('residence')) return ['☐ आधार Front/Back','☐ Voter ID Front/Back','☐ परिवार पहचान पत्र','☐ राशन कार्ड','☐ पासपोर्ट फोटो'];
+    if(n.includes('पेंशन')||n.includes('pension')) return ['☐ आधार कार्ड','☐ बैंक पासबुक','☐ आयु प्रमाण','☐ पासपोर्ट फोटो','☐ PPP'];
+    if(n.includes('किसान')||n.includes('farmer')||n.includes('फसल')) return ['☐ आधार कार्ड','☐ बैंक पासबुक','☐ जमाबंदी','☐ PPP','☐ पासपोर्ट फोटो'];
+    return ['☐ आधार कार्ड','☐ परिवार पहचान पत्र','☐ पासपोर्ट फोटो','☐ वोटर आईडी','☐ बैंक पासबुक'];
+}
+function getServiceInfo(svc){
+    var m=JSON.parse(localStorage.getItem('adv_svc_info_map')||'{}');
+    if(m[svc]) return m[svc];
+    return {eligibility:'• हरियाणा के स्थायी निवासी<br>• परिवार पहचान पत्र अनिवार्य<br>• आधार से मोबाइल लिंक हो',processingTime:'7–15 कार्यदिवस',importantInfo:'ℹ️ सभी दस्तावेज़ स्पष्ट एवं पठनीय होने चाहिए।',terms:'1. सभी जानकारी सत्य होनी चाहिए।<br>2. गलत जानकारी पर आवेदन निरस्त हो सकता है।<br>3. अंतिम निर्णय संबंधित विभाग का होगा।'};
+}
+function addRelationOption(){var v=(document.getElementById('newRelationInput')||{}).value.trim();if(!v)return;var o=getRelationOptions();if(o.indexOf(v)===-1)o.push(v);localStorage.setItem('adv_rel_opts',JSON.stringify(o));document.getElementById('newRelationInput').value='';renderSvcConfigPanel();}
+function removeRelationOption(i){var o=getRelationOptions();o.splice(i,1);localStorage.setItem('adv_rel_opts',JSON.stringify(o));renderSvcConfigPanel();}
+function resetRelationOptions(){localStorage.removeItem('adv_rel_opts');renderSvcConfigPanel();}
+function addOtpSlot(){var v=(document.getElementById('newOtpSlot')||{}).value.trim();if(!v)return;var o=getOtpTimeSlots();if(o.indexOf(v)===-1)o.push(v);localStorage.setItem('adv_otp_slots',JSON.stringify(o));document.getElementById('newOtpSlot').value='';renderSvcConfigPanel();}
+function removeOtpSlot(i){var o=getOtpTimeSlots();o.splice(i,1);localStorage.setItem('adv_otp_slots',JSON.stringify(o));renderSvcConfigPanel();}
+function addCallSlot(){var v=(document.getElementById('newCallSlot')||{}).value.trim();if(!v)return;var o=getCallTimeSlots();if(o.indexOf(v)===-1)o.push(v);localStorage.setItem('adv_call_slots',JSON.stringify(o));document.getElementById('newCallSlot').value='';renderSvcConfigPanel();}
+function removeCallSlot(i){var o=getCallTimeSlots();o.splice(i,1);localStorage.setItem('adv_call_slots',JSON.stringify(o));renderSvcConfigPanel();}
+function loadServiceDocConfig(){
+    var sel=document.getElementById('docConfigService'),box=document.getElementById('serviceDocConfigBox');
+    if(!sel||!box||!sel.value){if(box)box.innerHTML='';return;}
+    var svc=sel.value,docs=getServiceDocList(svc);
+    var h='<div style="background:#fff;border:1px solid #e2e8f0;border-radius:6px;padding:10px;margin-top:6px;">';
+    docs.forEach(function(d,i){h+='<div style="display:flex;align-items:center;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f1f5f9;"><span style="font-size:12px;font-weight:600;">'+d+'</span><button onclick="removeServiceDoc(\''+svc.replace(/'/g,"\\'")+'\',' + i + ')" style="background:#fee2e2;border:1px solid #fca5a5;color:#dc2626;padding:2px 6px;border-radius:3px;font-size:10px;cursor:pointer;">🗑️</button></div>';});
+    h+='<div style="display:flex;gap:5px;margin-top:6px;"><input type="text" id="newSvcDoc" placeholder="नया दस्तावेज़..." style="flex:1;padding:6px;border:2px solid #fcd34d;border-radius:4px;font-size:11px;font-weight:600;"><button onclick="addServiceDoc(\''+svc.replace(/'/g,"\\'")+'\')" style="background:#b45309;color:#fff;border:none;padding:6px 10px;border-radius:4px;font-weight:bold;cursor:pointer;font-size:11px;">➕</button></div></div>';
+    box.innerHTML=h;
+}
+function addServiceDoc(svc){var inp=document.getElementById('newSvcDoc');if(!inp||!inp.value.trim())return;var m=JSON.parse(localStorage.getItem('adv_svc_doc_map')||'{}');if(!m[svc])m[svc]=getServiceDocList(svc);m[svc].push(inp.value.trim());localStorage.setItem('adv_svc_doc_map',JSON.stringify(m));inp.value='';loadServiceDocConfig();}
+function removeServiceDoc(svc,i){var m=JSON.parse(localStorage.getItem('adv_svc_doc_map')||'{}');if(!m[svc])m[svc]=getServiceDocList(svc);m[svc].splice(i,1);localStorage.setItem('adv_svc_doc_map',JSON.stringify(m));loadServiceDocConfig();}
+function renderSvcConfigPanel(){
+    var rb=document.getElementById('relationOptionsList');
+    if(rb)rb.innerHTML=getRelationOptions().map(function(r,i){return'<span style="background:#1a4f8a;color:#fff;padding:4px 10px;border-radius:15px;font-size:11px;font-weight:bold;display:inline-flex;align-items:center;gap:4px;">'+r+'<button onclick="removeRelationOption('+i+')" style="background:none;border:none;color:#fff;cursor:pointer;font-size:12px;line-height:1;padding:0;">✕</button></span>';}).join('');
+    var ob=document.getElementById('otpSlotsList');
+    if(ob)ob.innerHTML=getOtpTimeSlots().map(function(s,i){return'<span style="background:#166534;color:#fff;padding:4px 10px;border-radius:15px;font-size:11px;font-weight:bold;display:inline-flex;align-items:center;gap:4px;">'+s+'<button onclick="removeOtpSlot('+i+')" style="background:none;border:none;color:#fff;cursor:pointer;font-size:12px;line-height:1;padding:0;">✕</button></span>';}).join('');
+    var cb=document.getElementById('callSlotsList');
+    if(cb)cb.innerHTML=getCallTimeSlots().map(function(s,i){return'<span style="background:#86198f;color:#fff;padding:4px 10px;border-radius:15px;font-size:11px;font-weight:bold;display:inline-flex;align-items:center;gap:4px;">'+s+'<button onclick="removeCallSlot('+i+')" style="background:none;border:none;color:#fff;cursor:pointer;font-size:12px;line-height:1;padding:0;">✕</button></span>';}).join('');
+    var sel=document.getElementById('docConfigService');
+    if(sel&&sel.options.length<=1){var all=(window.haryanaServicesDefaultList||[]).concat(JSON.parse(localStorage.getItem('adv_custom_services')||'[]'));all.forEach(function(s){var o=document.createElement('option');o.value=o.textContent=s.name;sel.appendChild(o);});}
+    // Counter stats
+    var today=new Date().toLocaleDateString('en-IN');
+    var toks=typeof tokens!=='undefined'?tokens:[];
+    var td=toks.filter(function(t){return t.DateOnly===today;});
+    var ct=document.getElementById('ctr_total'),cd=document.getElementById('ctr_done'),cp=document.getElementById('ctr_pend');
+    if(ct)ct.innerText=td.length;if(cd)cd.innerText=td.filter(function(t){return t['Fee Status']==='Cash';}).length;if(cp)cp.innerText=td.filter(function(t){return t['Fee Status']==='Pending';}).length;
+}
+function openCounterTokenMode(){var btn=document.getElementById('tokenCounterToggleBtn');if(btn){btn.style.display='inline-block';}switchMainTab('counter');}
+
+// ══════════════════════════════════════════════════════
+// SECURITY LOGS
+// ══════════════════════════════════════════════════════
+function renderSecurityLogsPanel(){
+    var logs=JSON.parse(localStorage.getItem('admin_sec_logs')||'[]');
+    var fails=logs.filter(function(l){return l.type&&l.type.indexOf('Failed')!==-1;}).length;
+    var locks=logs.filter(function(l){return l.type&&l.type.indexOf('Lock')!==-1;}).length;
+    var ok=logs.filter(function(l){return l.type&&l.type.indexOf('Success')!==-1;}).length;
+    var f=document.getElementById('sec_fails'),lk=document.getElementById('sec_locks'),s=document.getElementById('sec_ok');
+    if(f)f.innerText=fails;if(lk)lk.innerText=locks;if(s)s.innerText=ok;
+    var ab=document.getElementById('secAlertBox');
+    if(ab){if(fails>=3)ab.innerHTML='🚨 '+fails+' बार Admin Login विफल हुआ।';else ab.innerHTML='✅ कोई Security Alert नहीं।';}
+    var box=document.getElementById('securityLogsBox');
+    if(!box)return;
+    if(!logs.length){box.innerHTML='<div style="text-align:center;color:#94a3b8;padding:14px;font-size:12px;">कोई Log नहीं।</div>';return;}
+    box.innerHTML=logs.slice(0,100).map(function(l){
+        var ok2=l.type&&l.type.indexOf('Success')!==-1;
+        var bad=l.type&&(l.type.indexOf('Failed')!==-1||l.type.indexOf('Lock')!==-1);
+        return'<div style="padding:6px 12px;border-bottom:1px solid #f1f5f9;background:'+(ok2?'#f0fdf4':bad?'#fff0f0':'#f8fafc')+';display:flex;gap:10px;font-size:11px;align-items:center;"><span style="color:#64748b;min-width:130px;">'+l.time+'</span><span style="font-weight:700;color:'+(ok2?'#166534':bad?'#dc2626':'#334155')+';min-width:150px;">'+l.type+'</span><span style="color:#64748b;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+(l.device||'').substring(0,55)+'</span></div>';
+    }).join('');
+}
+function clearSecurityLogs(){if(!confirm('Security Logs साफ़ करें?'))return;localStorage.removeItem('admin_sec_logs');renderSecurityLogsPanel();alert('✅ Security Logs साफ़ हो गए।');}
+function exportSecurityLogs(){var logs=JSON.parse(localStorage.getItem('admin_sec_logs')||'[]');if(!logs.length){alert('कोई Log नहीं।');return;}var b=new Blob([JSON.stringify(logs,null,2)],{type:'application/json'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='ASK_SecLogs.json';a.click();}
+function checkFileIntegrity(){
+    var box=document.getElementById('integrityResult');if(!box)return;
+    var items=[{k:'csc_guhla_citizens',l:'Citizens DB'},{k:'adv_requests',l:'Requests'},{k:'adv_certs',l:'Certificates'},{k:'adv_logs',l:'Activity Logs'},{k:'adv_complaints',l:'Complaints'}];
+    var h='',allOk=true;
+    items.forEach(function(c){
+        try{var r=localStorage.getItem(c.k);if(!r){h+='<span style="color:#f59e0b;font-size:11px;margin-right:8px;">⚠️ '+c.l+': Empty</span>';}else{JSON.parse(r);h+='<span style="color:#166534;font-size:11px;margin-right:8px;">✅ '+c.l+': OK</span>';}}
+        catch(e){allOk=false;h+='<span style="color:#dc2626;font-size:11px;margin-right:8px;">❌ '+c.l+': CORRUPT!</span>';}
+    });
+    box.innerHTML='<div style="background:'+(allOk?'#f0fdf4':'#fff0f0')+';border:1px solid '+(allOk?'#86efac':'#fca5a5')+';border-radius:6px;padding:8px 12px;flex-wrap:wrap;display:flex;">'+h+'</div>';
+}
+function adminSelfPasswordReset(){
+    var m=(document.getElementById('adminResetMobile')||{}).value||'';
+    var c=(document.getElementById('adminResetCode')||{}).value||'';
+    var n=(document.getElementById('adminNewCode')||{}).value||'';
+    if(m.trim()!=='7400189348'){alert('❌ Mobile नंबर गलत है।');return;}
+    if(c.trim()!==(localStorage.getItem('admin_reset_code')||'ASK7400')){alert('❌ Reset Code गलत है! Default: ASK7400');return;}
+    if(!n||n.length<4){alert('❌ नया Code कम से कम 4 अक्षरों का होना चाहिए।');return;}
+    localStorage.setItem('admin_override_code',n);
+    advLog&&advLog('Admin Code Reset','Override code बदला गया।');
+    alert('✅ नया Override Code सेट: '+n+'\n\nयह Code मुख्य Code के अतिरिक्त काम करेगा।');
+
+
+    ['adminResetMobile','adminResetCode','adminNewCode'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
+}
+
+// ══════════════════════════════════════════════════════
+// showAdvTab EXTENSION (adds seclog, svcconfig, ctradmin)
+// ══════════════════════════════════════════════════════
+(function(){
+    var _orig=window.showAdvTab;
+    if(typeof _orig!=='function') return;
+    window.showAdvTab=function(tab){
+        ['seclog','svcconfig','ctradmin'].forEach(function(t){
+            var p=document.getElementById('advPanel_'+t),b=document.getElementById('advtab_'+t);
+            if(p)p.style.display='none';if(b)b.classList.remove('active-tab');
+        });
+        if(tab==='seclog'){
+            document.querySelectorAll('#advAdminMasterPanel .adv-section').forEach(function(s){s.style.display='none';});
+            var p=document.getElementById('advPanel_seclog'),b=document.getElementById('advtab_seclog');
+            if(p)p.style.display='block';if(b)b.classList.add('active-tab');
+            renderSecurityLogsPanel();return;
+        }
+        if(tab==='svcconfig'){
+            document.querySelectorAll('#advAdminMasterPanel .adv-section').forEach(function(s){s.style.display='none';});
+            var p2=document.getElementById('advPanel_svcconfig'),b2=document.getElementById('advtab_svcconfig');
+            if(p2)p2.style.display='block';if(b2)b2.classList.add('active-tab');
+            renderSvcConfigPanel();return;
+        }
+        if(tab==='ctradmin'){
+            document.querySelectorAll('#advAdminMasterPanel .adv-section').forEach(function(s){s.style.display='none';});
+            var p3=document.getElementById('advPanel_ctradmin'),b3=document.getElementById('advtab_ctradmin');
+            if(p3)p3.style.display='block';if(b3)b3.classList.add('active-tab');
+            renderSvcConfigPanel();return;
+        }
+        _orig(tab);
+    };
+})();
+
+// ══════════════════════════════════════════════════════
+// ADMIN LOGIN: LOG SUCCESS + SHOW COUNTER BTN
+// Override handleAdminLoginSubmit to add logging ONLY
+// ══════════════════════════════════════════════════════
+(function(){
+    var _origFn=window.handleAdminLoginSubmit;
+    if(typeof _origFn!=='function')return;
+    window.handleAdminLoginSubmit=function(e){
+        var inp=document.getElementById('modalSecretInput');
+        var inputVal=inp?inp.value:'';
+        // Support override code — swap temporarily
+        var overCode=localStorage.getItem('admin_override_code');
+        var usedOverride=false;
+        if(overCode&&inputVal===overCode){
+            if(inp) inp.value=_0xSecureTokenKey;
+            usedOverride=true;
+        }
+        // Call original (handles auth + UI)
+        _origFn.call(this,e);
+        // After original runs, check if login succeeded
+        // isAdminLoggedIn is set by original if correct
+        setTimeout(function(){
+            if(window.isAdminLoggedIn){
+                // Log success
+                var logs=JSON.parse(localStorage.getItem('admin_sec_logs')||'[]');
+                logs.unshift({time:new Date().toLocaleString('en-IN'),type:'Admin Login Success',device:navigator.userAgent.substring(0,70)});
+                if(logs.length>200)logs.splice(200);
+                localStorage.setItem('admin_sec_logs',JSON.stringify(logs));
+                localStorage.setItem('admin_failed_attempts','0');
+                // Show counter token button
+                var cBtn=document.getElementById('tokenCounterToggleBtn');
+                if(cBtn)cBtn.style.display='inline-block';
+                // Load branding
+                loadPermanentBranding();
+            } else {
+                // Log fail + track attempts
+                var attempts=parseInt(localStorage.getItem('admin_failed_attempts')||'0')+1;
+                localStorage.setItem('admin_failed_attempts',attempts);
+                var logs2=JSON.parse(localStorage.getItem('admin_sec_logs')||'[]');
+                logs2.unshift({time:new Date().toLocaleString('en-IN'),type:'Failed Admin Login (Attempt '+attempts+')',device:navigator.userAgent.substring(0,70)});
+                if(logs2.length>200)logs2.splice(200);
+                localStorage.setItem('admin_sec_logs',JSON.stringify(logs2));
+                if(attempts>=5){
+                    var lockT=Date.now()+(15*60*1000);
+                    localStorage.setItem('admin_locked_until',lockT);
+                    localStorage.setItem('admin_failed_attempts','0');
+                    setTimeout(function(){alert('🚫 5 बार गलत Code! Admin Panel 15 मिनट के लिए Lock हो गया।');},50);
+                }
+            }
+        },100);
+    };
+})();
+
+// ══════════════════════════════════════════════════════
+// ADMIN LOGOUT: hide counter button + Admin lockout pre-check
+// ══════════════════════════════════════════════════════
+(function(){
+    var _origAuth=window.toggleAdminMode;
+    if(typeof _origAuth!=='function')return;
+    window.toggleAdminMode=function(){
+        if(!window.isAdminLoggedIn){
+            // About to login — check lockout first
+            var lockedUntil=parseInt(localStorage.getItem('admin_locked_until')||'0');
+            if(lockedUntil&&Date.now()<lockedUntil){
+                var rem=Math.ceil((lockedUntil-Date.now())/60000);
+                alert('🚫 Admin Panel '+rem+' मिनट के लिए Lock है!\n5 बार गलत Code दर्ज किए गए थे।');
+
+                return;
+            }
+            if(lockedUntil&&Date.now()>=lockedUntil){
+                localStorage.removeItem('admin_locked_until');
+                localStorage.setItem('admin_failed_attempts','0');
+            }
+        }
+        _origAuth();
+        // After logout, hide counter button
+        setTimeout(function(){
+            if(!window.isAdminLoggedIn){
+                var btn=document.getElementById('tokenCounterToggleBtn');
+                if(btn)btn.style.display='none';
+                // Return to citizen view
+                var ml=document.getElementById('mainLayout');
+                if(ml)ml.style.display='none';
+                var cs=document.getElementById('citizenPortalSuiteSection');
+                if(cs)cs.style.display='block';
+                if(typeof toggleCitizenAuthView==='function')toggleCitizenAuthView(window.currentCitizenSession?'core':'login');
+            }
+        },50);
+    };
+})();
+
+// ══════════════════════════════════════════════════════
+// BRANDING PERSISTENCE
+// ══════════════════════════════════════════════════════
+function loadPermanentBranding(){
+    var logo=localStorage.getItem('branding_csc_logo');
+    if(logo){var el=document.getElementById('headerLogoCSC');if(el&&el.tagName==='IMG')el.src=logo;}
+}
+
+// ══════════════════════════════════════════════════════
+// SESSION TIMEOUT — 30 min auto logout
+// ══════════════════════════════════════════════════════
+var _sesTimer=null;
+function _resetSesTimer(){
+    clearTimeout(_sesTimer);
+    _sesTimer=setTimeout(function(){
+        if(window.isAdminLoggedIn){
+            advLog&&advLog('Session Timeout','30min inactivity');
+            alert('⏰ 30 मिनट निष्क्रियता — Admin Session Auto Logout!');
+            if(typeof toggleAdminMode==='function')toggleAdminMode();
+        }
+        if(window.currentCitizenSession){
+            window.currentCitizenSession=null;
+            sessionStorage.removeItem('csc_active_citizen');
+            if(typeof toggleCitizenAuthView==='function')toggleCitizenAuthView('login');
+        }
+    },30*60*1000);
+}
+['click','keydown','touchstart','scroll'].forEach(function(ev){document.addEventListener(ev,_resetSesTimer,{passive:true});});
+_resetSesTimer();
+
+// ══════════════════════════════════════════════════════
+// KEYBOARD SHORTCUTS PROTECTION
+// ══════════════════════════════════════════════════════
+document.addEventListener('keydown',function(e){
+    if(e.key==='F12'){e.preventDefault();return false;}
+    if(e.ctrlKey&&e.shiftKey&&['I','C','J','K'].includes(e.key)){e.preventDefault();return false;}
+    if(e.ctrlKey&&['U','P'].includes(e.key.toUpperCase())){e.preventDefault();return false;}
+});
+
+// ══════════════════════════════════════════════════════
+// PAGE INIT
+// ══════════════════════════════════════════════════════
+window.addEventListener('load', function(){
+    // Ensure citizen zone is visible, counter is hidden
+    var ml=document.getElementById('mainLayout');
+    if(ml)ml.style.display='none';
+    var cs=document.getElementById('citizenPortalSuiteSection');
+    if(cs)cs.style.display='block';
+    // Trigger citizen login view
+    if(typeof toggleCitizenAuthView==='function')toggleCitizenAuthView('login');
+    // Load saved branding
+    loadPermanentBranding();
+});
+</script>
 </body>
 </html>
