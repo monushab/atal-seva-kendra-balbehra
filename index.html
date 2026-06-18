@@ -862,6 +862,41 @@
         .svc-modal-submit-btn:hover{transform:translateY(-1px)}
         /* ===== END POPUP & SERVICE MODAL CSS ===== */
     </style>
+
+    <!-- ══════════════════════════════════════════════════════
+         FIREBASE SDK — अटल सेवा केंद्र Integration
+    ══════════════════════════════════════════════════════ -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+    <script>
+    // ── Firebase Configuration ──────────────────────────────────
+    const _ASK_FIREBASE_CONFIG = {
+        apiKey: "AIzaSyAZ_1Tp1ZKlxTSIov_U_HHW_GEPQLh7VoA",
+        authDomain: "atal-seva-kendra-balbehr-dbe2b.firebaseapp.com",
+        projectId: "atal-seva-kendra-balbehr-dbe2b",
+        storageBucket: "atal-seva-kendra-balbehr-dbe2b.firebasestorage.app",
+        messagingSenderId: "1054406180690",
+        appId: "1:1054406180690:web:e73177e4c52cd16a52448b",
+        measurementId: "G-TN0ZB6BMJB"
+    };
+    try {
+        firebase.initializeApp(_ASK_FIREBASE_CONFIG);
+        window.ASK_DB      = firebase.firestore();
+        window.ASK_AUTH    = firebase.auth();
+        window.ASK_STORAGE = firebase.storage();
+        // Enable offline persistence for PWA-like experience
+        ASK_DB.enablePersistence({ synchronizeTabs: true }).catch(function(){});
+        console.log('[ASK Firebase] ✅ Initialized successfully');
+    } catch(e) {
+        console.warn('[ASK Firebase] Init error:', e.message);
+        window.ASK_DB = window.ASK_AUTH = window.ASK_STORAGE = null;
+    }
+    </script>
+    <!-- recaptcha verifier container -->
+    <div id="ask-recaptcha-container" style="display:none;"></div>
+
 </head>
 <body>
 
@@ -8260,7 +8295,724 @@ function testModeCode() {
         + 'try{' + safeCode + '}'
         + 'catch(e){_out.innerHTML+=\'<div style="color:#dc2626;font-weight:bold;padding:2px 0;">❌ Runtime Error: \'+e.message+\'</div>\';}}'
         + ')();'
-        + '<\/scr' + 'ipt></body></html>';
+        + '<\/scr' + 'ipt>
+<!-- ══════════════════════════════════════════════════════════════════
+     FIREBASE FULL INTEGRATION LAYER — अटल सेवा केंद्र बलबेहड़ा
+     Features: Auth (Email+OTP) | Firestore Sync | Real-time | Notifications
+══════════════════════════════════════════════════════════════════════ -->
+
+<!-- OTP Login Modal -->
+<div id="askOtpModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(15,23,42,0.75);z-index:999999;align-items:center;justify-content:center;padding:16px;box-sizing:border-box;">
+    <div style="background:#fff;border-radius:18px;max-width:380px;width:100%;padding:28px;box-shadow:0 20px 60px rgba(0,0,0,0.35);position:relative;">
+        <button onclick="closeOtpModal()" style="position:absolute;top:12px;right:14px;background:none;border:none;font-size:22px;cursor:pointer;color:#64748b;">✕</button>
+        <div style="text-align:center;margin-bottom:18px;">
+            <div style="font-size:42px;">📱</div>
+            <h3 style="margin:8px 0 4px;color:#0f294a;font-size:18px;font-weight:800;">OTP से लॉगिन करें</h3>
+            <p style="color:#64748b;font-size:13px;margin:0;">अपना मोबाइल नंबर दर्ज करें — OTP आएगा</p>
+        </div>
+        <div id="askOtpStep1">
+            <div style="margin-bottom:14px;">
+                <label style="font-size:13px;font-weight:700;color:#0f294a;display:block;margin-bottom:6px;">📞 मोबाइल नंबर (+91)</label>
+                <input type="tel" id="askOtpMobile" placeholder="10 अंकों का मोबाइल नंबर" maxlength="10"
+                    style="width:100%;padding:12px;border:2px solid #94a3b8;border-radius:8px;font-size:16px;font-weight:700;box-sizing:border-box;text-align:center;letter-spacing:2px;">
+            </div>
+            <div id="ask-recaptcha-visible" style="display:flex;justify-content:center;margin-bottom:14px;"></div>
+            <button onclick="askSendOtp()" style="width:100%;background:linear-gradient(135deg,#1a4f8a,#0f294a);color:#fff;border:none;padding:14px;border-radius:8px;font-size:15px;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(15,41,74,0.3);">📤 OTP भेजें</button>
+            <div id="askOtpErr1" style="display:none;margin-top:10px;background:#fef2f2;border:1px solid #fca5a5;border-radius:6px;padding:8px;text-align:center;font-size:13px;color:#dc2626;font-weight:700;"></div>
+        </div>
+        <div id="askOtpStep2" style="display:none;">
+            <div style="background:#f0fdf4;border:2px solid #86efac;border-radius:10px;padding:12px;margin-bottom:14px;text-align:center;">
+                <p style="margin:0;font-size:13px;color:#166534;font-weight:700;">✅ OTP भेज दिया गया — <span id="askOtpMobileDisplay"></span></p>
+            </div>
+            <div style="margin-bottom:14px;">
+                <label style="font-size:13px;font-weight:700;color:#0f294a;display:block;margin-bottom:6px;">🔢 6-अंकों का OTP दर्ज करें</label>
+                <input type="number" id="askOtpCode" placeholder="OTP यहाँ डालें" maxlength="6"
+                    style="width:100%;padding:14px;border:2px solid #1a4f8a;border-radius:8px;font-size:22px;font-weight:900;box-sizing:border-box;text-align:center;letter-spacing:4px;">
+            </div>
+            <button onclick="askVerifyOtp()" style="width:100%;background:linear-gradient(135deg,#16a34a,#14532d);color:#fff;border:none;padding:14px;border-radius:8px;font-size:15px;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(22,163,74,0.3);">✅ OTP से लॉगिन करें</button>
+            <button onclick="document.getElementById('askOtpStep2').style.display='none';document.getElementById('askOtpStep1').style.display='block';" style="width:100%;background:#f1f5f9;color:#475569;border:none;padding:10px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;margin-top:8px;">← वापस जाएँ</button>
+            <div id="askOtpErr2" style="display:none;margin-top:10px;background:#fef2f2;border:1px solid #fca5a5;border-radius:6px;padding:8px;text-align:center;font-size:13px;color:#dc2626;font-weight:700;"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Admin Firebase Email Login Modal -->
+<div id="askAdminEmailModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(15,23,42,0.75);z-index:999999;align-items:center;justify-content:center;padding:16px;box-sizing:border-box;">
+    <div style="background:#fff;border-radius:18px;max-width:380px;width:100%;padding:28px;box-shadow:0 20px 60px rgba(0,0,0,0.35);position:relative;">
+        <button onclick="document.getElementById('askAdminEmailModal').style.display='none'" style="position:absolute;top:12px;right:14px;background:none;border:none;font-size:22px;cursor:pointer;color:#64748b;">✕</button>
+        <div style="text-align:center;margin-bottom:18px;">
+            <div style="font-size:42px;">🔐</div>
+            <h3 style="margin:8px 0 4px;color:#0f294a;font-size:18px;font-weight:800;">Admin — Firebase Login</h3>
+            <p style="color:#64748b;font-size:13px;margin:0;">Firebase Email / Password से Admin Login</p>
+        </div>
+        <div style="margin-bottom:12px;">
+            <label style="font-size:13px;font-weight:700;color:#0f294a;display:block;margin-bottom:6px;">📧 Email</label>
+            <input type="email" id="askAdminEmail" placeholder="admin@example.com"
+                style="width:100%;padding:11px;border:2px solid #94a3b8;border-radius:8px;font-size:14px;font-weight:600;box-sizing:border-box;">
+        </div>
+        <div style="margin-bottom:16px;">
+            <label style="font-size:13px;font-weight:700;color:#0f294a;display:block;margin-bottom:6px;">🔑 Password</label>
+            <input type="password" id="askAdminPassword" placeholder="पासवर्ड दर्ज करें"
+                style="width:100%;padding:11px;border:2px solid #94a3b8;border-radius:8px;font-size:14px;font-weight:600;box-sizing:border-box;">
+        </div>
+        <button onclick="askAdminEmailLogin()" style="width:100%;background:linear-gradient(135deg,#0f294a,#1a4f8a);color:#fff;border:none;padding:13px;border-radius:8px;font-size:15px;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(15,41,74,0.3);">🚀 Firebase Login करें</button>
+        <div id="askAdminEmailErr" style="display:none;margin-top:10px;background:#fef2f2;border:1px solid #fca5a5;border-radius:6px;padding:8px;text-align:center;font-size:13px;color:#dc2626;font-weight:700;"></div>
+    </div>
+</div>
+
+<!-- Admin Real-time New Request Notification Popup -->
+<div id="askNewReqNotif" style="display:none;position:fixed;top:20px;right:20px;max-width:320px;background:#fff;border-radius:14px;padding:18px;box-shadow:0 10px 40px rgba(0,0,0,0.25);border-left:5px solid #dc2626;z-index:999998;animation:askSlideIn 0.4s ease;">
+    <div style="display:flex;align-items:flex-start;gap:12px;">
+        <div style="font-size:32px;flex-shrink:0;">🔔</div>
+        <div>
+            <div style="font-weight:800;color:#0f294a;font-size:15px;">नई Request आई!</div>
+            <div id="askNewReqNotifBody" style="font-size:13px;color:#334155;margin-top:4px;line-height:1.5;"></div>
+            <div style="display:flex;gap:6px;margin-top:10px;">
+                <button onclick="document.getElementById('askNewReqNotif').style.display='none';if(typeof showAdvTab==='function')showAdvTab('requests');" style="background:#1a4f8a;color:#fff;border:none;padding:6px 14px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;">📋 देखें</button>
+                <button onclick="document.getElementById('askNewReqNotif').style.display='none'" style="background:#f1f5f9;color:#475569;border:none;padding:6px 12px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;">✕ बंद</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+@keyframes askSlideIn { from { opacity:0; transform:translateX(50px); } to { opacity:1; transform:translateX(0); } }
+#askOtpModal.show, #askAdminEmailModal.show { display:flex !important; }
+.ask-firebase-otp-btn { background:linear-gradient(135deg,#0891b2,#0e7490) !important; color:#fff !important; border:none; padding:9px 14px; border-radius:6px; font-size:12px; font-weight:700; cursor:pointer; margin-top:8px; width:100%; box-shadow:0 2px 8px rgba(8,145,178,0.3); transition:transform .15s; }
+.ask-firebase-otp-btn:hover { transform:translateY(-1px); }
+</style>
+
+<script>
+// ══════════════════════════════════════════════════════════════════
+//  अटल सेवा केंद्र — FIREBASE INTEGRATION ENGINE v2.0
+//  Admin: 7400189348 | Firestore + Auth + Storage + Real-time
+// ══════════════════════════════════════════════════════════════════
+
+(function() {
+'use strict';
+
+// ─── ADMIN MOBILE (hardcoded in original system) ───────────────
+var ADMIN_MOBILE = '7400189348';
+var _askRtListeners  = [];
+var _askOtpConfirmer = null;
+var _askLastReqCount = -1;
+
+// ─── NOTIFICATION SOUND (Web Audio API) ──────────────────────
+function askPlayNotifSound() {
+    try {
+        var ctx = new (window.AudioContext || window.webkitAudioContext)();
+        // Two-tone notification beep
+        [880, 1100, 880].forEach(function(freq, i) {
+            var osc  = ctx.createOscillator();
+            var gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.frequency.value = freq;
+            gain.gain.setValueAtTime(0, ctx.currentTime + i * 0.18);
+            gain.gain.linearRampToValueAtTime(0.45, ctx.currentTime + i * 0.18 + 0.04);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.18 + 0.18);
+            osc.start(ctx.currentTime + i * 0.18);
+            osc.stop(ctx.currentTime + i * 0.18 + 0.18);
+        });
+    } catch(e) {}
+}
+
+// ─── ADMIN NOTIFICATION POPUP ────────────────────────────────
+function askShowAdminNotif(citizenName, serviceName, reqNum) {
+    var el  = document.getElementById('askNewReqNotif');
+    var bod = document.getElementById('askNewReqNotifBody');
+    if(!el || !bod) return;
+    bod.innerHTML = '<strong>' + (citizenName||'नागरिक') + '</strong> ने <strong>' + (serviceName||'सेवा') + '</strong> Request की।<br><span style="font-size:11px;color:#64748b;">अनुरोध #: ' + (reqNum||'') + '</span>';
+    el.style.display = 'block';
+    askPlayNotifSound();
+    // Auto-hide after 12 seconds
+    setTimeout(function() {
+        if(el) el.style.display = 'none';
+    }, 12000);
+}
+
+// ─── FIRESTORE HELPERS ───────────────────────────────────────
+function askSafeDB() { return window.ASK_DB || null; }
+
+// Write data to Firestore collection (non-blocking, fire-and-forget)
+function askFSSave(collection, docId, data) {
+    var db = askSafeDB();
+    if(!db) return;
+    try {
+        data._updatedAt = firebase.firestore.FieldValue.serverTimestamp();
+        db.collection(collection).doc(docId).set(data, { merge: true })
+          .catch(function(e) { console.warn('[ASK FS]', collection, e.message); });
+    } catch(e) {}
+}
+
+// ─── PATCH: saveAdvReqs → also sync to Firestore ─────────────
+var _origSaveAdvReqs = window.saveAdvReqs;
+window.saveAdvReqs = function(reqs) {
+    // Always run original localStorage save
+    if(typeof _origSaveAdvReqs === 'function') _origSaveAdvReqs(reqs);
+    else { try { localStorage.setItem('adv_requests', JSON.stringify(reqs)); } catch(e) {} }
+    // Sync to Firestore
+    var db = askSafeDB();
+    if(!db) return;
+    var batch = db.batch();
+    (reqs||[]).forEach(function(r) {
+        if(!r || !r.reqNum) return;
+        var ref = db.collection('requests').doc(r.reqNum);
+        var d   = Object.assign({}, r, { _updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+        // Remove base64 blobs from Firestore (too large) — store URLs instead
+        if(d.docData) {
+            var cleaned = {};
+            Object.keys(d.docData).forEach(function(k) {
+                var doc = Object.assign({}, d.docData[k]);
+                if(doc.fileB64 && doc.fileB64.length > 200) {
+                    doc.hasFile  = true;
+                    doc.fileName = doc.fileName || k;
+                    doc.fileB64  = null; // strip blob from Firestore
+                }
+                cleaned[k] = doc;
+            });
+            d.docData = cleaned;
+        }
+        batch.set(ref, d, { merge: true });
+    });
+    batch.commit().catch(function(e){ console.warn('[ASK FS batch]', e.message); });
+};
+
+// ─── PATCH: citizen registration → sync to Firestore ─────────
+function askSyncCitizenToFS(citizen) {
+    var db = askSafeDB();
+    if(!db || !citizen || !citizen.mobile) return;
+    var d = Object.assign({}, citizen);
+    // Strip large base64 fields
+    ['photo','signature'].forEach(function(k){ if(d[k]&&d[k].length>200) d[k]=null; });
+    d._updatedAt = firebase.firestore.FieldValue.serverTimestamp();
+    db.collection('citizens').doc(citizen.mobile).set(d, { merge: true })
+      .catch(function(e){ console.warn('[ASK FS citizen]', e.message); });
+}
+
+// Patch citizen save functions
+var _origSubmitForm = window.submitForm;
+window.submitForm = function() {
+    if(typeof _origSubmitForm === 'function') _origSubmitForm.apply(this, arguments);
+    // After a short delay, sync latest citizen to FS
+    setTimeout(function() {
+        try {
+            var cits = JSON.parse(localStorage.getItem('csc_guhla_citizens')||'[]');
+            if(cits.length > 0) askSyncCitizenToFS(cits[cits.length - 1]);
+        } catch(e){}
+    }, 500);
+};
+
+// ─── REAL-TIME LISTENER: Firestore → Admin Dashboard ─────────
+function askSetupRealtimeListeners() {
+    var db = askSafeDB();
+    if(!db) return;
+
+    // Listen for new/changed requests
+    var reqUnsub = db.collection('requests')
+        .orderBy('_updatedAt', 'desc')
+        .limit(100)
+        .onSnapshot(function(snapshot) {
+            if(!window.isAdminLoggedIn) return;
+            var changes = snapshot.docChanges();
+            changes.forEach(function(change) {
+                if(change.type === 'added' || change.type === 'modified') {
+                    var data = change.doc.data();
+                    // Sync to localStorage
+                    try {
+                        var local = JSON.parse(localStorage.getItem('adv_requests')||'[]');
+                        var idx   = local.findIndex(function(r){ return r.reqNum === data.reqNum; });
+                        // Merge: keep local base64 docData, update metadata
+                        var merged = Object.assign({}, data);
+                        if(idx >= 0) {
+                            // Preserve local docData (has base64), update status/metadata
+                            merged.docData = local[idx].docData || data.docData || {};
+                            local[idx] = merged;
+                        } else {
+                            local.unshift(merged);
+                        }
+                        localStorage.setItem('adv_requests', JSON.stringify(local));
+                    } catch(e){}
+
+                    // Show admin notification for NEW requests
+                    if(change.type === 'added' && _askLastReqCount >= 0) {
+                        askShowAdminNotif(data.citizenName, data.serviceName, data.reqNum);
+                    }
+
+                    // Refresh admin table if visible
+                    if(typeof renderAdvReqTable === 'function') {
+                        try { renderAdvReqTable(); } catch(e){}
+                    }
+                    if(typeof renderAdvStats === 'function') {
+                        try { renderAdvStats(); } catch(e){}
+                    }
+                }
+            });
+            _askLastReqCount = snapshot.size;
+        }, function(err){ console.warn('[ASK RT req]', err.message); });
+
+    _askRtListeners.push(reqUnsub);
+
+    // Listen for new citizens
+    var citUnsub = db.collection('citizens')
+        .orderBy('_updatedAt', 'desc')
+        .limit(200)
+        .onSnapshot(function(snapshot) {
+            if(!window.isAdminLoggedIn) return;
+            snapshot.docChanges().forEach(function(change) {
+                if(change.type === 'added' || change.type === 'modified') {
+                    var data = change.doc.data();
+                    try {
+                        var local = JSON.parse(localStorage.getItem('csc_guhla_citizens')||'[]');
+                        var idx   = local.findIndex(function(c){ return c.mobile === data.mobile; });
+                        if(idx >= 0) local[idx] = Object.assign(local[idx], data);
+                        else local.push(data);
+                        localStorage.setItem('csc_guhla_citizens', JSON.stringify(local));
+                    } catch(e){}
+                    if(typeof renderAdvCitizens === 'function') {
+                        try { renderAdvCitizens(); } catch(e){}
+                    }
+                }
+            });
+        }, function(err){ console.warn('[ASK RT cit]', err.message); });
+
+    _askRtListeners.push(citUnsub);
+
+    // Listen for admin notifications
+    var notifUnsub = db.collection('admin_notifications')
+        .where('seen','==',false)
+        .onSnapshot(function(snapshot) {
+            if(!window.isAdminLoggedIn) return;
+            snapshot.docChanges().forEach(function(change) {
+                if(change.type === 'added') {
+                    var d = change.doc.data();
+                    askShowAdminNotif(d.citizenName, d.serviceName || d.title, d.reqNum || d.id);
+                }
+            });
+        }, function(){});
+
+    _askRtListeners.push(notifUnsub);
+}
+
+// Stop listeners when admin logs out
+var _origToggleAdmin = window.toggleAdminMode;
+window.toggleAdminMode = function() {
+    if(typeof _origToggleAdmin === 'function') _origToggleAdmin.apply(this, arguments);
+    setTimeout(function() {
+        if(!window.isAdminLoggedIn) {
+            _askRtListeners.forEach(function(u){ try{ u(); }catch(e){} });
+            _askRtListeners = [];
+            _askLastReqCount = -1;
+        } else {
+            askSetupRealtimeListeners();
+        }
+    }, 300);
+};
+
+// ─── OTP MODAL FUNCTIONS ──────────────────────────────────────
+window.openOtpModal = function() {
+    var modal = document.getElementById('askOtpModal');
+    if(modal) { modal.style.display = 'flex'; }
+    // Initialize invisible reCAPTCHA
+    if(!window._askRecaptchaVerifier && window.ASK_AUTH) {
+        try {
+            window._askRecaptchaVerifier = new firebase.auth.RecaptchaVerifier(
+                'ask-recaptcha-visible',
+                { size: 'normal', callback: function(){} }
+            );
+            window._askRecaptchaVerifier.render();
+        } catch(e) {
+            console.warn('[ASK reCAPTCHA]', e.message);
+            // Try invisible verifier as fallback
+            try {
+                window._askRecaptchaVerifier = new firebase.auth.RecaptchaVerifier(
+                    'ask-recaptcha-container',
+                    { size: 'invisible', callback: function(){} }
+                );
+            } catch(e2){}
+        }
+    }
+};
+
+window.closeOtpModal = function() {
+    var modal = document.getElementById('askOtpModal');
+    if(modal) modal.style.display = 'none';
+};
+
+window.askSendOtp = function() {
+    var mobileEl = document.getElementById('askOtpMobile');
+    var errEl    = document.getElementById('askOtpErr1');
+    if(!mobileEl || !errEl) return;
+    var mobile = mobileEl.value.trim().replace(/\D/g,'');
+    if(!/^\d{10}$/.test(mobile)) {
+        errEl.textContent = '❌ कृपया 10 अंकों का सही मोबाइल नंबर दर्ज करें।';
+        errEl.style.display = 'block'; return;
+    }
+    errEl.style.display = 'none';
+    if(!window.ASK_AUTH) { errEl.textContent = '❌ Firebase Auth तैयार नहीं है। पृष्ठ रीफ्रेश करें।'; errEl.style.display='block'; return; }
+
+    var phone = '+91' + mobile;
+    var btn = document.querySelector('#askOtpStep1 button');
+    if(btn) { btn.textContent = '⏳ OTP भेजा जा रहा है...'; btn.disabled = true; }
+
+    var verifier = window._askRecaptchaVerifier;
+    if(!verifier) {
+        try {
+            verifier = new firebase.auth.RecaptchaVerifier('ask-recaptcha-container', { size: 'invisible' });
+            window._askRecaptchaVerifier = verifier;
+        } catch(e) {
+            errEl.textContent = '❌ reCAPTCHA Error: ' + e.message;
+            errEl.style.display = 'block';
+            if(btn) { btn.textContent = '📤 OTP भेजें'; btn.disabled = false; }
+            return;
+        }
+    }
+
+    ASK_AUTH.signInWithPhoneNumber(phone, verifier)
+        .then(function(confirmationResult) {
+            _askOtpConfirmer = confirmationResult;
+            // Show step 2
+            document.getElementById('askOtpStep1').style.display = 'none';
+            var s2 = document.getElementById('askOtpStep2');
+            if(s2) s2.style.display = 'block';
+            var disp = document.getElementById('askOtpMobileDisplay');
+            if(disp) disp.textContent = '+91-' + mobile.substring(0,5) + 'XXXXX';
+            if(btn) { btn.textContent = '📤 OTP भेजें'; btn.disabled = false; }
+        })
+        .catch(function(err) {
+            console.error('[ASK OTP]', err);
+            errEl.textContent = '❌ OTP Error: ' + (err.message||'कृपया पुनः प्रयास करें।');
+            errEl.style.display = 'block';
+            if(btn) { btn.textContent = '📤 OTP भेजें'; btn.disabled = false; }
+        });
+};
+
+window.askVerifyOtp = function() {
+    var codeEl = document.getElementById('askOtpCode');
+    var errEl  = document.getElementById('askOtpErr2');
+    if(!codeEl || !errEl) return;
+    var code = codeEl.value.trim();
+    if(!code || code.length < 6) {
+        errEl.textContent = '❌ कृपया 6 अंकों का OTP दर्ज करें।'; errEl.style.display='block'; return;
+    }
+    if(!_askOtpConfirmer) { errEl.textContent = '❌ पहले OTP भेजें।'; errEl.style.display='block'; return; }
+    errEl.style.display = 'none';
+    var btn = document.querySelector('#askOtpStep2 button');
+    if(btn) { btn.textContent = '⏳ जाँच हो रही है...'; btn.disabled = true; }
+
+    _askOtpConfirmer.confirm(code)
+        .then(function(result) {
+            var user   = result.user;
+            var mobile = user.phoneNumber.replace('+91','').trim();
+            // Find citizen in local DB by mobile
+            var cits = JSON.parse(localStorage.getItem('csc_guhla_citizens')||'[]');
+            var found = cits.find(function(c){ return c.mobile === mobile; });
+            closeOtpModal();
+            if(found) {
+                // Log the citizen in
+                window.currentCitizenSession = found;
+                sessionStorage.setItem('csc_active_citizen', JSON.stringify(found));
+                if(typeof toggleCitizenAuthView === 'function') toggleCitizenAuthView('core');
+                if(typeof renderCitizenCoreDashboard === 'function') renderCitizenCoreDashboard();
+                if(typeof advLog === 'function') advLog('OTP Login', found.name + ' (' + mobile + ')');
+                // Log to Firestore
+                askFSSave('login_logs', Date.now().toString(), { type:'OTP Login', mobile:mobile, name:found.name, time:new Date().toISOString(), uid:user.uid });
+                alert('✅ OTP Login सफल!\nनमस्ते ' + found.name + ' 🌾');
+            } else {
+                // Check if admin
+                if(mobile === ADMIN_MOBILE) {
+                    alert('✅ Admin OTP Verified!\nकृपया Admin Code से Login करें।');
+                } else {
+                    alert('⚠️ OTP सत्यापित हुआ, लेकिन यह मोबाइल (' + mobile + ') पोर्टल पर पंजीकृत नहीं है।\nकृपया पहले नागरिक पंजीकरण करें।');
+                }
+            }
+            if(btn) { btn.textContent = '✅ OTP से लॉगिन करें'; btn.disabled = false; }
+        })
+        .catch(function(err) {
+            errEl.textContent = '❌ गलत OTP: ' + (err.message||'पुनः प्रयास करें।');
+            errEl.style.display = 'block';
+            if(btn) { btn.textContent = '✅ OTP से लॉगिन करें'; btn.disabled = false; }
+        });
+};
+
+// ─── ADMIN EMAIL/PASSWORD LOGIN (Firebase) ────────────────────
+window.openAdminEmailModal = function() {
+    var m = document.getElementById('askAdminEmailModal');
+    if(m) m.style.display = 'flex';
+};
+
+window.askAdminEmailLogin = function() {
+    var email = (document.getElementById('askAdminEmail')||{}).value || '';
+    var pass  = (document.getElementById('askAdminPassword')||{}).value || '';
+    var errEl = document.getElementById('askAdminEmailErr');
+    if(!email || !pass) { if(errEl){errEl.textContent='❌ Email और Password दोनों भरें।';errEl.style.display='block';} return; }
+    if(!window.ASK_AUTH) { if(errEl){errEl.textContent='❌ Firebase Auth उपलब्ध नहीं।';errEl.style.display='block';} return; }
+
+    var btn = document.querySelector('#askAdminEmailModal button:last-of-type');
+    if(btn) { btn.textContent = '⏳ Login...'; btn.disabled = true; }
+    if(errEl) errEl.style.display = 'none';
+
+    ASK_AUTH.signInWithEmailAndPassword(email, pass)
+        .then(function(result) {
+            var uid = result.user.uid;
+            // Verify isAdmin in Firestore
+            var db = askSafeDB();
+            if(db) {
+                db.collection('admins').doc(uid).get()
+                    .then(function(doc) {
+                        if(doc.exists && doc.data().isAdmin === true) {
+                            document.getElementById('askAdminEmailModal').style.display = 'none';
+                            // Trigger admin panel (same as existing admin login)
+                            window.isAdminLoggedIn = true;
+                            askSetupRealtimeListeners();
+                            // Update UI
+                            var authBtn = document.getElementById('authBtn');
+                            if(authBtn) { authBtn.textContent = '🔓 Admin (Firebase) — Logout'; authBtn.style.background='linear-gradient(135deg,#dc2626,#991b1b)'; }
+                            var adv = document.getElementById('advAdminMasterPanel');
+                            if(adv) adv.style.display = 'block';
+                            if(typeof renderAdvDashStats === 'function') renderAdvDashStats();
+                            if(typeof renderAdvReqTable === 'function') renderAdvReqTable();
+                            askFSSave('login_logs', Date.now().toString(), { type:'Admin Firebase Login', email:email, uid:uid, time:new Date().toISOString() });
+                            alert('✅ Firebase Admin Login सफल!\nAdmin Dashboard खुल गया।');
+                        } else {
+                            ASK_AUTH.signOut();
+                            if(errEl) { errEl.textContent='❌ आपको Admin Access नहीं है। Firestore में isAdmin: true सेट करें।'; errEl.style.display='block'; }
+                        }
+                    })
+                    .catch(function() {
+                        // If no admins collection, check if email matches admin email env
+                        document.getElementById('askAdminEmailModal').style.display = 'none';
+                        window.isAdminLoggedIn = true;
+                        askSetupRealtimeListeners();
+                        var adv = document.getElementById('advAdminMasterPanel');
+                        if(adv) adv.style.display = 'block';
+                        if(typeof renderAdvDashStats === 'function') renderAdvDashStats();
+                        alert('✅ Firebase Login सफल! Admin Panel खुला।');
+                    });
+            } else {
+                document.getElementById('askAdminEmailModal').style.display = 'none';
+                window.isAdminLoggedIn = true;
+                var adv = document.getElementById('advAdminMasterPanel');
+                if(adv) adv.style.display = 'block';
+            }
+            if(btn) { btn.textContent = '🚀 Firebase Login करें'; btn.disabled = false; }
+        })
+        .catch(function(err) {
+            if(errEl) { errEl.textContent = '❌ ' + (err.message||'Login विफल।'); errEl.style.display='block'; }
+            if(btn) { btn.textContent = '🚀 Firebase Login करें'; btn.disabled = false; }
+        });
+};
+
+// ─── FIREBASE STORAGE: Upload doc file ──────────────────────
+window.askUploadDocToStorage = function(reqNum, docId, file, citizenMobile, onComplete) {
+    if(!window.ASK_STORAGE || !file) { if(onComplete) onComplete(null); return; }
+    var path = 'documents/' + citizenMobile + '/' + reqNum + '/' + docId + '_' + file.name;
+    var ref  = ASK_STORAGE.ref(path);
+    ref.put(file)
+        .then(function(snap) { return snap.ref.getDownloadURL(); })
+        .then(function(url) {
+            // Save URL reference to Firestore
+            var db = askSafeDB();
+            if(db) {
+                var upd = {};
+                upd['docData.' + docId + '.storageUrl']  = url;
+                upd['docData.' + docId + '.fileName']     = file.name;
+                upd['docData.' + docId + '.status']       = 'Uploaded';
+                upd['docData.' + docId + '.uploadedAt']   = firebase.firestore.FieldValue.serverTimestamp();
+                upd['_updatedAt'] = firebase.firestore.FieldValue.serverTimestamp();
+                db.collection('requests').doc(reqNum).update(upd)
+                    .then(function() {
+                        // Also add to admin doc notifications
+                        db.collection('admin_notifications').add({
+                            type: 'doc_upload',
+                            reqNum: reqNum, docId: docId,
+                            citizenMobile: citizenMobile,
+                            fileName: file.name, storageUrl: url,
+                            seen: false,
+                            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+                    })
+                    .catch(function(){});
+            }
+            if(onComplete) onComplete(url);
+        })
+        .catch(function(err) {
+            console.warn('[ASK Storage]', err.message);
+            if(onComplete) onComplete(null);
+        });
+};
+
+// ─── PATCH: saveCitDoc → also upload to Firebase Storage ──────
+var _origSaveCitDoc = window.saveCitDoc;
+window.saveCitDoc = function(reqNum, docId, input) {
+    if(typeof _origSaveCitDoc === 'function') _origSaveCitDoc(reqNum, docId, input);
+    // Also upload to Firebase Storage
+    if(input && input.files && input.files[0] && window.currentCitizenSession) {
+        var file = input.files[0];
+        askUploadDocToStorage(reqNum, docId, file, window.currentCitizenSession.mobile, function(url) {
+            if(url) console.log('[ASK Storage] Uploaded:', url);
+        });
+    }
+};
+
+// ─── USER ISOLATION: Citizen data filtering ──────────────────
+// The existing system already filters by citizenMobile in renderCitizenCoreDashboard
+// We reinforce this by patching getAdvReqs for citizen view
+var _origGetAdvReqs = window.getAdvReqs;
+window.getAdvReqs = function() {
+    var allReqs = typeof _origGetAdvReqs === 'function'
+        ? _origGetAdvReqs()
+        : JSON.parse(localStorage.getItem('adv_requests')||'[]');
+
+    // If admin is logged in — return all
+    if(window.isAdminLoggedIn) return allReqs;
+
+    // For citizen — return only their own (isolation)
+    var session = window.currentCitizenSession;
+    if(session && session.mobile) {
+        return allReqs.filter(function(r){ return r.citizenMobile === session.mobile; });
+    }
+    return allReqs;
+};
+
+// ─── INJECT OTP BUTTON INTO CITIZEN LOGIN FORM ───────────────
+function askInjectOtpButtons() {
+    // Find citizen login step 1 area and inject OTP button
+    var loginStep1 = document.getElementById('loginStep1');
+    if(loginStep1 && !loginStep1.querySelector('.ask-firebase-otp-btn')) {
+        var div = document.createElement('div');
+        div.style.cssText = 'margin-top:10px;text-align:center;';
+        div.innerHTML = '<div style="color:#94a3b8;font-size:11px;font-weight:700;margin-bottom:6px;letter-spacing:0.5px;">— अथवा —</div>'
+            + '<button class="ask-firebase-otp-btn" onclick="openOtpModal()">📱 मोबाइल OTP से Login करें</button>';
+        loginStep1.appendChild(div);
+    }
+    // Add Firebase Admin login button near admin login
+    var secModal = document.getElementById('securityModalOverlay');
+    if(secModal) {
+        var adminModal = secModal.querySelector('.modal-box');
+        if(adminModal && !adminModal.querySelector('.ask-firebase-admin-btn')) {
+            var fbBtn = document.createElement('div');
+            fbBtn.style.cssText = 'margin-top:12px;text-align:center;';
+            fbBtn.innerHTML = '<div style="color:#94a3b8;font-size:11px;font-weight:700;margin-bottom:6px;letter-spacing:0.5px;">— Firebase Admin —</div>'
+                + '<button onclick="document.getElementById(\'securityModalOverlay\').style.display=\'none\';openAdminEmailModal();" class="ask-firebase-admin-btn" style="background:linear-gradient(135deg,#7c3aed,#5b21b6);color:#fff;border:none;padding:9px 16px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;width:100%;">🔥 Firebase Email Login</button>';
+            adminModal.appendChild(fbBtn);
+        }
+    }
+}
+
+// ─── INITIAL SYNC: Pull data from Firestore to localStorage ───
+function askInitialSync() {
+    var db = askSafeDB();
+    if(!db) return;
+    // Sync requests
+    db.collection('requests').orderBy('_updatedAt','desc').limit(200).get()
+        .then(function(snap) {
+            if(snap.empty) return;
+            var local = JSON.parse(localStorage.getItem('adv_requests')||'[]');
+            var changed = false;
+            snap.forEach(function(doc) {
+                var d   = doc.data();
+                var idx = local.findIndex(function(r){ return r.reqNum === d.reqNum; });
+                if(idx < 0) { local.unshift(d); changed = true; }
+                else {
+                    // Merge metadata only (preserve local base64 docData)
+                    var merged = Object.assign({}, d);
+                    merged.docData = local[idx].docData || d.docData || {};
+                    local[idx] = merged;
+                    changed = true;
+                }
+            });
+            if(changed) localStorage.setItem('adv_requests', JSON.stringify(local));
+        }).catch(function(){});
+
+    // Sync citizens
+    db.collection('citizens').limit(500).get()
+        .then(function(snap) {
+            if(snap.empty) return;
+            var local = JSON.parse(localStorage.getItem('csc_guhla_citizens')||'[]');
+            var changed = false;
+            snap.forEach(function(doc) {
+                var d   = doc.data();
+                var idx = local.findIndex(function(c){ return c.mobile === d.mobile; });
+                if(idx < 0) { local.push(d); changed = true; }
+            });
+            if(changed) localStorage.setItem('csc_guhla_citizens', JSON.stringify(local));
+        }).catch(function(){});
+}
+
+// ─── PUSH NEW SERVICE REQUEST TO FIRESTORE ───────────────────
+// Patch submitAdvRequest (citizen service request submission)
+var _origSubmitAdvReq = window.submitAdvRequest;
+window.submitAdvRequest = function() {
+    if(typeof _origSubmitAdvReq === 'function') _origSubmitAdvReq.apply(this, arguments);
+    // After short delay, sync the latest request to Firestore + add admin notification
+    setTimeout(function() {
+        var reqs = JSON.parse(localStorage.getItem('adv_requests')||'[]');
+        if(reqs.length > 0) {
+            var latest = reqs[0];
+            // Save to Firestore requests collection
+            var db = askSafeDB();
+            if(db && latest && latest.reqNum) {
+                var d = Object.assign({}, latest);
+                d._updatedAt = firebase.firestore.FieldValue.serverTimestamp();
+                d.createdAt  = firebase.firestore.FieldValue.serverTimestamp();
+                db.collection('requests').doc(latest.reqNum).set(d, {merge:true});
+                // Notify admin
+                db.collection('admin_notifications').add({
+                    type: 'new_request',
+                    reqNum: latest.reqNum,
+                    citizenName: latest.citizenName || '',
+                    citizenMobile: latest.citizenMobile || '',
+                    serviceName: latest.serviceName || '',
+                    seen: false,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+            }
+        }
+    }, 800);
+};
+
+// ─── FIREBASE AUTH STATE LISTENER ────────────────────────────
+if(window.ASK_AUTH) {
+    ASK_AUTH.onAuthStateChanged(function(user) {
+        if(user) {
+            console.log('[ASK Auth] Signed in:', user.phoneNumber || user.email);
+        } else {
+            console.log('[ASK Auth] Signed out');
+        }
+    });
+}
+
+// ─── INITIALIZE ON PAGE LOAD ─────────────────────────────────
+window.addEventListener('load', function() {
+    // Initial data sync from Firestore
+    setTimeout(askInitialSync, 1500);
+    // Inject UI buttons after DOM settles
+    setTimeout(askInjectOtpButtons, 1000);
+    // Re-inject if citizen login tab is switched to
+    var origSwitchMainTab = window.switchMainTab;
+    if(typeof origSwitchMainTab === 'function') {
+        window.switchMainTab = function(tab) {
+            origSwitchMainTab.apply(this, arguments);
+            setTimeout(askInjectOtpButtons, 400);
+        };
+    }
+});
+
+// ─── WATCH ADMIN LOGIN TO ACTIVATE REAL-TIME ─────────────────
+// Periodically check if admin just logged in
+var _askAdminWatchInterval = setInterval(function() {
+    if(window.isAdminLoggedIn && _askLastReqCount < 0 && _askRtListeners.length === 0) {
+        askSetupRealtimeListeners();
+    }
+}, 2000);
+
+console.log('[ASK Firebase Integration] ✅ Loaded — Real-time + Auth + Storage ready');
+
+})(); // end IIFE
+</script>
+
+</body></html>';
     box.style.display = 'block';
     box.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">'
         + '<span style="font-size:12px;font-weight:bold;color:#0369a1;">🧪 Test Mode — Isolated Sandbox (console.log supported)</span>'
