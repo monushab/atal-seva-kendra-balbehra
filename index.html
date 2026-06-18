@@ -999,6 +999,10 @@
                 <button type="submit" class="modal-btn modal-btn-submit">लॉगिन करें</button>
             </div>
         </form>
+            <!-- Firebase Admin Login -->
+            <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;">
+                <button type="button" onclick="closeAdminModal();setTimeout(openAdminEmailModal,200);" style="width:100%;background:linear-gradient(135deg,#7c3aed,#5b21b6);color:#fff;border:none;padding:11px;border-radius:8px;font-size:13px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;"><span style="font-size:18px;">🔥</span><span>Firebase Email से Admin Login</span></button>
+            </div>
     </div>
 </div>
 
@@ -1995,6 +1999,15 @@
                         <input type="text" id="loginMobile_v2" maxlength="10" inputmode="numeric" placeholder="10 अंकों का मोबाइल नंबर" style="text-align:center;font-size:18px;letter-spacing:3px;" onkeydown="if(event.key==='Enter') citLoginStep1()">
                     </div>
                     <button type="button" onclick="citLoginStep1()" class="btn" style="background:var(--secondary-color);">आगे बढ़ें →</button>
+                    <!-- Firebase OTP Login -->
+                    <div style="margin-top:12px;">
+                        <div style="display:flex;align-items:center;gap:8px;margin:10px 0;">
+                            <div style="flex:1;height:1px;background:#e2e8f0;"></div>
+                            <span style="font-size:11px;color:#94a3b8;font-weight:700;white-space:nowrap;">— या इस तरह भी —</span>
+                            <div style="flex:1;height:1px;background:#e2e8f0;"></div>
+                        </div>
+                        <button type="button" onclick="openOtpModal()" style="width:100%;background:linear-gradient(135deg,#0891b2,#0e7490);color:#fff;border:none;padding:12px;border-radius:8px;font-size:14px;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(8,145,178,0.3);display:flex;align-items:center;justify-content:center;gap:8px;"><span style="font-size:20px;">📱</span><span>मोबाइल OTP से Login (Firebase)</span></button>
+                    </div>
                     <div id="tempCredDisplay" style="display:none;margin-top:14px;background:#fffbeb;border:2px solid #f59e0b;border-radius:10px;padding:14px;text-align:left;">
                         <p style="margin:0 0 8px;font-weight:800;color:#92400e;font-size:13px;text-align:center;">🔐 Admin द्वारा भेजी गई Temporary Login जानकारी</p>
                         <table style="width:100%;font-size:13px;border-collapse:collapse;">
@@ -8876,7 +8889,8 @@ window.getAdvReqs = function() {
 };
 
 // ─── INJECT OTP BUTTON INTO CITIZEN LOGIN FORM ───────────────
-function askInjectOtpButtons() {
+function askInjectOtpButtons() { return; // Buttons now permanently in HTML
+    /*
     // Find citizen login step 1 area and inject OTP button
     var loginStep1 = document.getElementById('loginStep1');
     if(loginStep1 && !loginStep1.querySelector('.ask-firebase-otp-btn')) {
