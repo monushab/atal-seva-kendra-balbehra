@@ -11752,9 +11752,33 @@ function _toast2(msg){
       }, 1000);
   })();
 
-  // ---------------------------------------------------------
-  // 🔥 2. FIREBASE LIVE SYSTEM (Atal Seva Kendra)
-  // ---------------------------------------------------------
+  // <!-- ======================================================= -->
+<!-- 🔥 FIREBASE LIVE SYSTEM & ANTI-HACKING SECURITY CODE 🔥 -->
+<!-- ======================================================= -->
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+<script>
+  // 🛡️ ANTI-HACK & ANTI-INSPECT SYSTEM
+  (function() {
+      document.addEventListener('contextmenu', event => event.preventDefault());
+      document.onkeydown = function(e) {
+          if(e.keyCode == 123) return false; 
+          if(e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74 || e.keyCode == 67)) return false; 
+          if(e.ctrlKey && (e.keyCode == 85 || e.keyCode == 83)) return false; 
+      };
+      setInterval(function() {
+          let before = new Date().getTime();
+          debugger; 
+          let after = new Date().getTime();
+          if (after - before > 100) {
+              document.body.innerHTML = "<h1 style='color:red; text-align:center; margin-top:20%; font-family:sans-serif;'>🚨 SECURITY ALERT 🚨<br>UNAUTHORIZED ACCESS DETECTED!</h1>";
+              window.location.replace("about:blank");
+          }
+      }, 1000);
+  })();
+
+  // 🔥 FIREBASE INITIALIZATION
   const firebaseConfig = {
     apiKey: "AIzaSyAZ_1Tp1ZKlxTSIov_U_HHW_GEPQLh7VoA",
     authDomain: "atal-seva-kendra-balbehr-dbe2b.firebaseapp.com",
@@ -11766,37 +11790,150 @@ function _toast2(msg){
 
   firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
-  console.log("✅ Firebase Connected!");
 
-  // Live Sync Data
+  // 🛑 SAFETY GUARD (लूप को रोकने के लिए विशेष गार्ड)
+  let isSyncingFromFirebase = false;
+
+  // Realtime Sync from Firebase to Browser LocalStorage
   db.collection("adv_requests").onSnapshot((snapshot) => {
+      isSyncingFromFirebase = true;
       let liveRequests = [];
       snapshot.forEach((doc) => liveRequests.push(doc.data()));
       localStorage.setItem('adv_requests', JSON.stringify(liveRequests));
+      isSyncingFromFirebase = false;
       if(typeof renderAdvReqTable === 'function') renderAdvReqTable();
       if(typeof renderCitizenCoreDashboard === 'function') renderCitizenCoreDashboard();
+  }, (error) => {
+      console.error("Firebase adv_requests Sync Error: ", error);
   });
 
   db.collection("cit_admin_msgs").onSnapshot((snapshot) => {
+      isSyncingFromFirebase = true;
       let liveMsgs = [];
       snapshot.forEach((doc) => liveMsgs.push(doc.data()));
       localStorage.setItem('cit_admin_msgs', JSON.stringify(liveMsgs));
+      isSyncingFromFirebase = false;
       if(typeof _renderHelpCenter === 'function') _renderHelpCenter();
       if(typeof renderCitMsgInbox === 'function') renderCitMsgInbox();
+  }, (error) => {
+      console.error("Firebase cit_admin_msgs Sync Error: ", error);
   });
 
-  // Save to Firebase Override
+  db.collection("csc_guhla_citizens").onSnapshot((snapshot) => {
+      isSyncingFromFirebase = true;
+      let liveCitizens = [];
+      snapshot.forEach((doc) => liveCitizens.push(doc.data()));
+      localStorage.setItem('csc_guhla_citizens', JSON.stringify(liveCitizens));
+      isSyncingFromFirebase = false;
+      if(typeof renderAdvCitizens === 'function') renderAdvCitizens();
+  }, (error) => {
+      console.error("Firebase csc_guhla_citizens Sync Error: ", error);
+  });
+
+  // Override Save Functions (लूप सुरक्षा के साथ Firebase पर भेजना)
   window._SQ = async function(dataArray) {
       localStorage.setItem('adv_requests', JSON.stringify(dataArray));
-      for(let req of dataArray) { if(req.reqNum) await db.collection("adv_requests").doc(req.reqNum).set(req, { merge: true }); }
+      if(isSyncingFromFirebase) return; // अगर सिंक चालू है तो दोबारा फायरबेस पर न भेजें
+      for(let req of dataArray) { 
+          if(req.reqNum) await db.collection("adv_requests").doc(req.reqNum).set(req, { merge: true }); 
+      }
   };
   window.saveAdvReqs = window._SQ;
 
-  // ---------------------------------------------------------
-  // 🤖 3. AI ADMIN DEVELOPER TOOL (Magic Auto-Coder)
-  // ---------------------------------------------------------
-  
-  // A. AI से किये गए बदलावों को Firebase से Live प्राप्त करना (नागरिकों के लिए)
+  window._saveMsgs = async function(dataArray) {
+      localStorage.setItem('cit_admin_msgs', JSON.stringify(dataArray));
+      if(isSyncingFromFirebase) return; // अगर सिंक चालू है तो दोबारा फायरबेस पर न भेजें
+      for(let msg of dataArray) {
+          if(msg.id) await db.collection("cit_admin_msgs").doc(msg.id).set(msg, { merge: true });
+      }
+  };
+
+  // Citizen Registration Interceptor
+  const _origSetItem = localStorage.setItem;
+  localStorage.setItem = function(key, value) {
+      _origSetItem.apply(this, arguments);
+      if (isSyncingFromFirebase) return; // अगर फायरबेस से आ रहा है तो वापस फायरबेस को न भेजें (No Infinite Loop!)
+      
+      if(key === 'csc_guhla_citizens') {
+          try {
+              let citizens = JSON.parse(value);
+              for(let cit of citizens) {
+                  if(cit.mobile) {
+                      db.collection("csc_guhla_citizens").doc(cit.mobile).set(cit, { merge: true });
+                  }
+              }
+          } catch(e) {}
+      }
+  };
+
+  // AI Tool Logic (Only for Admin)
+  function injectAITool() {
+      if(document.getElementById('aiAdminToolBox')) return;
+      const aiHTML = `
+      <div id="aiAdminToolBox" style="display:none; position:fixed; bottom:20px; right:20px; z-index:999999; background:#fff; border:3px solid #1a4f8a; border-radius:15px; width:320px; box-shadow:0 10px 30px rgba(0,0,0,0.3); overflow:hidden;">
+          <div style="background:linear-gradient(135deg,#0f294a,#1a4f8a); color:#fff; padding:12px; font-weight:bold; display:flex; justify-content:space-between;">
+              <span>🤖 AI Developer (Admin)</span>
+              <button onclick="document.getElementById('aiAdminToolBox').style.display='none'" style="background:none;border:none;color:#fff;cursor:pointer;">✖</button>
+          </div>
+          <div id="aiChatBox" style="height:150px; overflow-y:auto; padding:10px; background:#f0f4f8; font-size:13px;">
+              <p>🤖 कमांड दें (जैसे: 'Header का रंग लाल कर दो')</p>
+          </div>
+          <div style="display:flex; border-top:1px solid #ccc;">
+              <input type="text" id="aiCommandInput" placeholder="यहाँ कमांड लिखें..." style="flex:1; padding:10px; border:none; outline:none;" onkeydown="if(event.key==='Enter') executeAICommand()">
+              <button onclick="executeAICommand()" style="background:#1a4f8a; color:#fff; border:none; padding:10px; cursor:pointer;">भेजें</button>
+          </div>
+      </div>
+      <button id="aiOpenBtn" onclick="document.getElementById('aiAdminToolBox').style.display='block'" style="display:none; position:fixed; bottom:20px; right:20px; z-index:999998; background:#dc2626; color:#fff; border:none; border-radius:50px; padding:12px 20px; font-weight:bold; cursor:pointer;">🤖 AI Tool</button>
+      `;
+      document.body.insertAdjacentHTML('beforeend', aiHTML);
+  }
+
+  setInterval(() => {
+      injectAITool();
+      const aiBtn = document.getElementById('aiOpenBtn');
+      const aiBox = document.getElementById('aiAdminToolBox');
+      if (document.getElementById('mainLayout') && document.getElementById('mainLayout').classList.contains('admin-layout-active')) {
+          if(aiBtn && aiBox && aiBox.style.display === 'none') aiBtn.style.display = 'block';
+      } else {
+          if(aiBtn) aiBtn.style.display = 'none';
+          if(aiBox) aiBox.style.display = 'none';
+      }
+  }, 2000);
+
+  window.executeAICommand = async function() {
+      const input = document.getElementById('aiCommandInput');
+      const chatBox = document.getElementById('aiChatBox');
+      const command = input.value.trim().toLowerCase();
+      if(!command) return;
+
+      chatBox.innerHTML += `<p style="text-align:right;"><span>${command}</span></p>`;
+      input.value = "";
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      let newCss = "";
+      let reply = "";
+
+      if (command.includes("हेडर") || command.includes("header")) {
+          if(command.includes("लाल")) newCss = "header { background: red !important; }";
+          else if(command.includes("हरा")) newCss = "header { background: green !important; }";
+          else if(command.includes("काला")) newCss = "header { background: black !important; }";
+          reply = "हेडर का रंग बदल दिया गया है!";
+      } else if (command.includes("बटन")) {
+          if(command.includes("लाल")) newCss = ".btn { background: red !important; }";
+          reply = "बटनों का रंग बदल दिया गया है!";
+      } else {
+          reply = "कृपया 'हेडर का रंग लाल कर दो' जैसा कमांड लिखें।";
+      }
+
+      setTimeout(async () => {
+          chatBox.innerHTML += `<p>🤖 ${reply}</p>`;
+          chatBox.scrollTop = chatBox.scrollHeight;
+          if(newCss) {
+              await db.collection("ai_live_tweaks").doc("global_design").set({ styles: newCss }, { merge: false });
+          }
+      }, 500);
+  };
+
   db.collection("ai_live_tweaks").doc("global_design").onSnapshot((doc) => {
       if (doc.exists) {
           let tweaks = doc.data().styles || "";
@@ -11806,93 +11943,9 @@ function _toast2(msg){
               styleTag.id = "ai_dynamic_styles";
               document.head.appendChild(styleTag);
           }
-          styleTag.innerHTML = tweaks; // AI द्वारा किया गया डिज़ाइन बदलाव तुरंत लागू होगा
+          styleTag.innerHTML = tweaks;
       }
   });
-
-  // B. AI UI सिर्फ Admin के लिए बनाना
-  function injectAITool() {
-      if(document.getElementById('aiAdminToolBox')) return;
-
-      const aiHTML = `
-      <div id="aiAdminToolBox" style="display:none; position:fixed; bottom:20px; right:20px; z-index:999999; background:#fff; border:3px solid #1a4f8a; border-radius:15px; width:320px; box-shadow:0 10px 30px rgba(0,0,0,0.3); overflow:hidden; font-family:sans-serif;">
-          <div style="background:linear-gradient(135deg,#0f294a,#1a4f8a); color:#fff; padding:12px; font-weight:bold; font-size:16px; display:flex; justify-content:space-between;">
-              <span>🤖 AI Developer (Admin)</span>
-              <button onclick="document.getElementById('aiAdminToolBox').style.display='none'" style="background:none;border:none;color:#fff;cursor:pointer;font-size:16px;">✖</button>
-          </div>
-          <div id="aiChatBox" style="height:200px; overflow-y:auto; padding:10px; background:#f0f4f8; font-size:13px; color:#333;">
-              <p><b>🤖 AI:</b> हैलो एडमिन! मुझे कमांड दें (जैसे: "Header का रंग लाल कर दो" या "बटन का रंग हरा कर दो")। मैं इसे तुरंत सभी के लिए बदल दूंगा!</p>
-          </div>
-          <div style="display:flex; border-top:1px solid #ccc;">
-              <input type="text" id="aiCommandInput" placeholder="यहाँ कमांड लिखें..." style="flex:1; padding:10px; border:none; outline:none;" onkeydown="if(event.key==='Enter') executeAICommand()">
-              <button onclick="executeAICommand()" style="background:#1a4f8a; color:#fff; border:none; padding:10px 15px; cursor:pointer;">भेजें</button>
-          </div>
-      </div>
-      <button id="aiOpenBtn" onclick="document.getElementById('aiAdminToolBox').style.display='block'" style="display:none; position:fixed; bottom:20px; right:20px; z-index:999998; background:linear-gradient(135deg,#dc2626,#991b1b); color:#fff; border:none; border-radius:50px; padding:12px 20px; font-weight:bold; cursor:pointer; box-shadow:0 4px 10px rgba(0,0,0,0.3);">🤖 AI Tool खोलें</button>
-      `;
-      document.body.insertAdjacentHTML('beforeend', aiHTML);
-  }
-
-  // C. चेक करना कि Admin लॉगिन है या नहीं (ताकि बटन सिटिज़न को न दिखे)
-  setInterval(() => {
-      injectAITool();
-      const aiBtn = document.getElementById('aiOpenBtn');
-      const aiBox = document.getElementById('aiAdminToolBox');
-      // अगर Admin Layout एक्टिव है, तभी AI बटन दिखाएँ
-      if (document.getElementById('mainLayout') && document.getElementById('mainLayout').classList.contains('admin-layout-active')) {
-          if(aiBtn && aiBox && aiBox.style.display === 'none') aiBtn.style.display = 'block';
-      } else {
-          if(aiBtn) aiBtn.style.display = 'none';
-          if(aiBox) aiBox.style.display = 'none';
-      }
-  }, 2000);
-
-  // D. AI Logic - कमांड को कोड में बदलना और Firebase में सेव करना
-  window.executeAICommand = async function() {
-      const input = document.getElementById('aiCommandInput');
-      const chatBox = document.getElementById('aiChatBox');
-      const command = input.value.trim().toLowerCase();
-      if(!command) return;
-
-      // Admin का मैसेज दिखाएं
-      chatBox.innerHTML += `<p style="text-align:right;"><span style="background:#dbeafe; padding:5px 10px; border-radius:10px; display:inline-block;">${command}</span></p>`;
-      input.value = "";
-      chatBox.scrollTop = chatBox.scrollHeight;
-
-      let newCss = "";
-      let reply = "";
-
-      // 🧠 AI Interpreter (कुछ उदाहरण)
-      if (command.includes("हेडर") || command.includes("header")) {
-          if(command.includes("लाल") || command.includes("red")) newCss = "header { background: red !important; }";
-          else if(command.includes("हरा") || command.includes("green")) newCss = "header { background: green !important; }";
-          else if(command.includes("काला") || command.includes("black")) newCss = "header { background: black !important; }";
-          reply = "हेडर का रंग बदल दिया गया है और Firebase में सेव कर दिया गया है!";
-      } 
-      else if (command.includes("बटन") || command.includes("button")) {
-          if(command.includes("लाल") || command.includes("red")) newCss = ".btn, .btn-auth { background: red !important; }";
-          else if(command.includes("नीला") || command.includes("blue")) newCss = ".btn, .btn-auth { background: blue !important; }";
-          reply = "बटनों का रंग बदल दिया गया है!";
-      }
-      else if (command.includes("रिसेट") || command.includes("reset")) {
-          newCss = "/* Reset */";
-          reply = "डिज़ाइन वापस पहले जैसा (Reset) कर दिया गया है!";
-      }
-      else {
-          reply = "माफ़ करें, मैं अभी सीख रहा हूँ। कृपया 'हेडर का रंग लाल कर दो' जैसा कुछ कहें।";
-      }
-
-      // AI का रिप्लाई दिखाएं
-      setTimeout(async () => {
-          chatBox.innerHTML += `<p><b>🤖 AI:</b> ${reply}</p>`;
-          chatBox.scrollTop = chatBox.scrollHeight;
-
-          // अगर कोई डिज़ाइन चेंज हुआ है, तो उसे Firebase में डालें (जिससे यह तुरंत लाइव हो जाए)
-          if(newCss) {
-              await db.collection("ai_live_tweaks").doc("global_design").set({ styles: newCss }, { merge: false });
-          }
-      }, 500);
-  };
 </script>
 <!-- ======================================================= -->
 </body>
